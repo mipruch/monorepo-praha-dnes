@@ -3,6 +3,7 @@ import Tag from "./components/Tag.vue";
 import Tags from "./components/Tags.vue";
 import Button from "./components/Button.vue";
 import Map from "./components/Map.vue";
+import Popup from "./components/Popup.vue";
 import {Plus} from "lucide-vue-next";
 // import mapa from "~/map";
 // import ImageryLayer from "@arcgis/core/layers/ImageryLayer.js";
