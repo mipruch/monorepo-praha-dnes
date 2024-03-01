@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {h, nextTick, onMounted, render} from "vue";
+import {h, onMounted, render} from "vue";
 import Popup from "./Popup.vue";
 import "leaflet";
 import "leaflet.markercluster";
@@ -9,11 +9,13 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 const L = window["L"];
 
 onMounted(async () => {
-	const myMap = L.map("viewDiv", {
+	const map = L.map("viewDiv", {
 		center: [50.075, 14.46],
 		zoom: 12,
 		zoomControl: true,
 	});
+	map.zoomControl.remove();
+	map.attributionControl.remove();
 
 	// BASE LAYER
 	L.tileLayer(
@@ -21,11 +23,18 @@ onMounted(async () => {
 		{
 			attribution: '© <a href="https://www.mapbox.com/">Mapbox</a>',
 		}
-	).addTo(myMap);
+	).addTo(map);
 
 	// MARKER
-	const cluster = L.markerClusterGroup();
-	myMap.addLayer(cluster);
+	const cluster = L.markerClusterGroup({
+		showCoverageOnHover: false,
+		iconCreateFunction(cluster) {
+			return L.divIcon({
+				html: `<div class='marker-cluster'>${cluster.getChildCount()}</div>`,
+			});
+		},
+	});
+	map.addLayer(cluster);
 
 	const markerOptions = {
 		icon: L.icon({
@@ -81,28 +90,38 @@ onMounted(async () => {
 				);
 			});
 	});
+	document.getElementById("zoomin")?.addEventListener("click", () => {
+		map.flyTo(map.getCenter(), map.getZoom() + 1);
+	});
+	document.getElementById("zoomout")?.addEventListener("click", () => {
+		map.flyTo(map.getCenter(), map.getZoom() - 1);
+	});
 });
 </script>
 
 <template>
-	<div class="w-full h-full">
-		<div id="viewDiv" class="outline-0 w-full h-full" />
+	<div class="w-full h-full relative">
+		<div id="viewDiv" class="w-full h-full absolute top-0 left-0" />
 		<div
-			id="layersButton"
-			class="w-[100px] h-[100px] bg-foreground rounded-[var(--gap)]"
-		/>
-		<div id="zoomGroup" class="grid gap-[7px]">
+			class="map-controls z-[9999] absolute bottom-0 flex justify-between w-full p-[--gap] items-end"
+		>
 			<div
-				class="w-8 h-8 bg-foreground rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"
-				id="zoomin"
-			>
-				+
-			</div>
-			<div
-				class="w-8 h-8 bg-foreground rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"
-				id="zoomout"
-			>
-				-
+				id="layersButton"
+				class="w-[100px] h-[100px] bg-transparent rounded-[var(--gap)]"
+			/>
+			<div id="zoomGroup" class="grid items-end h-min gap-[7px]">
+				<div
+					class="w-8 h-8 bg-foreground leading-none rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"
+					id="zoomin"
+				>
+					+
+				</div>
+				<div
+					class="w-8 h-8 leading-none bg-foreground rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"
+					id="zoomout"
+				>
+					-
+				</div>
 			</div>
 		</div>
 	</div>
@@ -124,5 +143,35 @@ onMounted(async () => {
 	.leaflet-popup-tip-container {
 		display: none;
 	}
+}
+
+// Cluster icon
+
+.leaflet-div-icon {
+	background: none;
+	border: none;
+}
+
+.marker-cluster {
+	display: grid;
+	place-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	border-radius: 5px;
+	@apply bg-green;
+}
+
+// Zoom controls
+.leaflet-control-zoom {
+	background: none;
+	border: none;
+	display: grid;
+	gap: 7px;
+}
+.leaflet-touch,
+.leaflet-bar {
+	background: none !important;
+	border: none !important;
 }
 </style>
