@@ -12,8 +12,10 @@
 		"lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
 	},
 	"dependencies": {
+		"@types/leaflet.markercluster": "^1.5.4",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.0",
+		"leaflet.markercluster": "^1.5.3",
 		"lucide-vue-next": "^0.343.0",
 		"radix-vue": "^1.4.9",
 		"tailwind-merge": "^2.2.1",

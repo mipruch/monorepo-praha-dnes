@@ -27,6 +27,7 @@ module.exports = {
 			"5xl": "2.985rem", // h1
 		},
 		colors: {
+			transparent: "transparent",
 			white: "#FFFFFF",
 			black: "#000000",
 			border: "hsl(var(--border))",

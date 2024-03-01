@@ -75,6 +75,7 @@
 	}
 	html {
 		font-size: 17px;
+		box-sizing: border-box;
 	}
 	body {
 		@apply bg-background text-foreground;
