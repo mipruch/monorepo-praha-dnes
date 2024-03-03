@@ -1,101 +1,82 @@
 <script setup lang="ts">
+import {pragueMap} from "../stores/mapStore";
 import {h, onMounted, render} from "vue";
+import geojson from "../assets/geojson.json";
+import L from "leaflet";
 import Popup from "./Popup.vue";
-import "leaflet";
 import "leaflet.markercluster";
-import "leaflet/dist/leaflet.css";
-import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import "Leaflet.Deflate";
 
-const L = window["L"];
+var deflated: any;
+onMounted(() => {
+	pragueMap.initializeMap("viewDiv");
 
-onMounted(async () => {
-	const map = L.map("viewDiv", {
-		center: [50.075, 14.46],
-		zoom: 12,
-		zoomControl: true,
-	});
-	map.zoomControl.remove();
-	map.attributionControl.remove();
-
-	// BASE LAYER
-	L.tileLayer(
-		"https://api.mapbox.com/styles/v1/mapbox/light-v11/tiles/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicHJ1bTA5IiwiYSI6ImNsbnlubHdiZjBvbTQybHFrOG52emN0aGEifQ.nU4crnexBhRyteEeIpBpgQ",
-		{
-			attribution: '© <a href="https://www.mapbox.com/">Mapbox</a>',
-		}
-	).addTo(map);
-
-	// MARKER
-	const cluster = L.markerClusterGroup({
-		showCoverageOnHover: false,
-		iconCreateFunction(cluster) {
-			return L.divIcon({
-				html: `<div class='marker-cluster'>${cluster.getChildCount()}</div>`,
+	const color = "#FF0000";
+	const json = new L.GeoJSON(geojson, {
+		style: {
+			color: color,
+			weight: 2,
+			opacity: 1,
+			fillColor: color,
+			fillOpacity: 0.5,
+		},
+		pointToLayer: function (geoJsonPoint, latlng) {
+			return L.marker(latlng, {
+				icon: L.icon({
+					iconUrl: "marker-municipality.png",
+					iconSize: [30, 30], // size of the icon
+					iconAnchor: [15, 15], // point of the icon which will correspond to marker's location
+					popupAnchor: [0, -10], // point from which the popup should open relative to the iconAnchor)
+				}),
 			});
 		},
+		onEachFeature: (feature, layer) => {
+			// does this feature have a property named popupContent?
+			if (feature.properties && feature.properties.name) {
+				const popup = L.popup({
+					className: "custom-popup",
+					minWidth: 480,
+					content: `<div id="map-popup-${feature.properties.name}" />`,
+					pane: "popupPane",
+					closeButton: false,
+				});
+				layer.bindPopup(popup);
+
+				layer.on("click", (e) => {
+					render(
+						h(Popup, {properties: feature.properties}, null),
+						document.getElementById(
+							`map-popup-${feature.properties.name}`
+						)!
+					);
+				});
+			}
+		},
 	});
-	map.addLayer(cluster);
-
-	const markerOptions = {
-		icon: L.icon({
-			iconUrl: "marker-municipality.png",
-			iconSize: [30, 30], // size of the icon
-			iconAnchor: [15, 15], // point of the icon which will correspond to marker's location
-			popupAnchor: [0, -10], // point from which the popup should open relative to the iconAnchor)
-		}),
-	};
-
-	const myHeaders = new Headers();
-	myHeaders.append(
-		"X-Access-Token",
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
-	);
-
-	const requestOptions = {
-		method: "GET",
-		headers: myHeaders,
-		redirect: "follow",
-	};
-
-	const res = await fetch(
-		"https://api.golemio.cz/v2/municipalauthorities/",
-		requestOptions
-	)
-		.then((response) => response.text())
-		.then((result) => {
-			return JSON.parse(result);
-		})
-		.catch((error) => console.error(error));
-
-	res.features.forEach((feature) => {
-		const {geometry, properties} = feature;
-		const {coordinates} = geometry;
-		const [lng, lat] = coordinates;
-
-		const popup = L.popup({
-			className: "custom-popup",
-			minWidth: 480,
-			content: `<div id="map-popup-${properties.id}" />`,
-			pane: "popupPane",
-			closeButton: false,
-		});
-
-		L.marker([lat, lng], markerOptions)
-			.addTo(cluster)
-			.bindPopup(popup)
-			.on("click", (e) => {
-				render(
-					h(Popup, {properties}, null),
-					document.getElementById(`map-popup-${properties.id}`)!
-				);
-			});
+	// const cluster = L.markerClusterGroup({
+	// 	showCoverageOnHover: false,
+	// 	spiderfyOnMaxZoom: true,
+	// 	iconCreateFunction(cluster) {
+	// 		return L.divIcon({
+	// 			html: `<div class='marker-cluster'>${cluster.getChildCount()}</div>`,
+	// 		});
+	// 	},
+	// });
+	deflated = L.deflate({
+		minSize: 100,
+		markerLayer: pragueMap.cluster,
+		markerOptions: {
+			icon: L.divIcon({
+				html: `<div class='deflate-icon' style='background-color:${color}'><img src="home.svg"></div>`,
+				iconSize: [30, 30], // size of the icon
+				iconAnchor: [15, 15], // point of the icon which will correspond to marker's location
+				popupAnchor: [0, -10], // point from which the popup should open relative to the iconAnchor)
+			}),
+		},
 	});
-	document.getElementById("zoomin")?.addEventListener("click", () => {
-		map.flyTo(map.getCenter(), map.getZoom() + 1);
-	});
-	document.getElementById("zoomout")?.addEventListener("click", () => {
-		map.flyTo(map.getCenter(), map.getZoom() - 1);
-	});
+	// json.addTo(deflated);
+
+	// deflated.addTo(pragueMap.map);
 });
 </script>
 
@@ -107,7 +88,7 @@ onMounted(async () => {
 		>
 			<div
 				id="layersButton"
-				class="w-[100px] h-[100px] bg-transparent rounded-[var(--gap)]"
+				class="w-[100px] h-[100px] bg-foreground rounded-[var(--gap)] cursor-pointer"
 			/>
 			<div id="zoomGroup" class="grid items-end h-min gap-[7px]">
 				<div
@@ -160,6 +141,19 @@ onMounted(async () => {
 	height: 26px;
 	border-radius: 5px;
 	@apply bg-green;
+}
+
+.deflate-icon {
+	display: grid;
+	place-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	img {
+		transform: translateY(-1px);
+		height: 17px;
+	}
 }
 
 // Zoom controls
