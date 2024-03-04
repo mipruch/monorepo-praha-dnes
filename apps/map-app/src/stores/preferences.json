@@ -1,0 +1,26 @@
+[
+	{
+		"id": "1",
+		"name": "Veřejná správa",
+		"color": "#FF5A00",
+		"fetchUrl": "https://api.golemio.cz/v2/municipalauthorities/",
+		"iconUrl": "home.svg",
+		"popupMapper": null
+	},
+	{
+		"id": "2",
+		"name": "Parkoviště",
+		"color": "#0066FF",
+		"fetchUrl": "https://api.golemio.cz/v2/parking/",
+		"iconUrl": "parking.svg",
+		"popupMapper": null
+	},
+	{
+		"id": "3",
+		"name": "Mikroklima",
+		"color": "#FFCE1F",
+		"fetchUrl": "https://api.golemio.cz/v2/airqualitystations/",
+		"iconUrl": "climate.svg",
+		"popupMapper": null
+	}
+]
