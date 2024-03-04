@@ -2,16 +2,20 @@
 import Tag from "./Tag.vue";
 import Tags from "./Tags.vue";
 
-const {properties} = defineProps({
+const {properties, color} = defineProps({
 	properties: {
 		type: Object,
 		required: true,
+	},
+	color: {
+		type: String,
+		default: "#FF5AFF",
 	},
 });
 </script>
 <template>
 	<div
-		class="p-[17px] bg-grey-200 rounded-[10px] _card outline outline-orange outline-offset-[3px]"
+		:class="`p-[17px] bg-grey-200 rounded-[10px] _card outline popup outline-offset-[3px]`"
 	>
 		<Tags class="mb-4">
 			<Tag text="Veřejná správa" />
@@ -38,3 +42,9 @@ const {properties} = defineProps({
 		</table>
 	</div>
 </template>
+
+<style lang="scss">
+.popup {
+	outline-color: v-bind(color);
+}
+</style>
