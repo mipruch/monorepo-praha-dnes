@@ -1,23 +1,26 @@
 [
 	{
-		"id": "1",
+		"id": "verejna-sprava",
 		"name": "Veřejná správa",
+		"paragraph": "Veřejná správa. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
 		"color": "#FF5A00",
 		"fetchUrl": "https://api.golemio.cz/v2/municipalauthorities/",
 		"iconUrl": "home.svg",
 		"popupMapper": null
 	},
 	{
-		"id": "2",
+		"id": "parkoviste",
 		"name": "Parkoviště",
+		"paragraph": "Parkoviště. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
 		"color": "#0066FF",
 		"fetchUrl": "https://api.golemio.cz/v2/parking/",
 		"iconUrl": "parking.svg",
 		"popupMapper": null
 	},
 	{
-		"id": "3",
+		"id": "mikroklima",
 		"name": "Mikroklima",
+		"paragraph": "Mikroklima. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
 		"color": "#FFCE1F",
 		"fetchUrl": "https://api.golemio.cz/v2/airqualitystations/",
 		"iconUrl": "climate.svg",
