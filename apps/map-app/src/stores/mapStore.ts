@@ -84,7 +84,13 @@ class PragueMap {
 		return this.layersData.layers;
 	}
 
-	public activeLayers: Map<string, object> = reactive(new Map());
+	public activeLayers: Map<
+		string,
+		{
+			pref: any;
+			res: any;
+		}
+	> = reactive(new Map());
 
 	public async addLayer(id: string) {
 		const pref = preferences.find((pref) => pref.id === id);
@@ -157,8 +163,11 @@ async function makeLayer(pref: any) {
 					render(
 						h(
 							Popup,
-							{properties: feature.properties, color: color},
-							null
+							{
+								properties: feature.properties,
+								color: color,
+							} as any,
+							undefined
 						),
 						document.getElementById(
 							`map-popup-${feature.properties.name}`

@@ -64,7 +64,7 @@ function refresh() {
 		</DropdownMenu>
 
 		<div
-			class="p-4 bg-grey-200 rounded-lg"
+			class="p-4 bg-grey-200 rounded-lg mb-8"
 			v-for="[key, value] in Array.from(pragueMap.activeLayers.entries())"
 		>
 			<div>
