@@ -15,13 +15,15 @@ import {ref, watch} from "vue";
 import layers from "@/stores/preferences.json";
 import Card from "./Card.vue";
 
+import type {Layer} from "@/types";
+
 function refresh() {
 	console.log(pragueMap.layers);
 }
 
-function addLayer(id: string) {
+function addLayer(value: Layer) {
 	isLoading.value = true;
-	pragueMap.addLayer(id).then(() => {
+	pragueMap.addLayer(value).then(() => {
 		isLoading.value = false;
 	});
 }
@@ -40,43 +42,54 @@ const isLoading = ref(false);
 					></DropdownMenuTrigger
 				>
 				<DropdownMenuContent>
-					<DropdownMenuLabel>Veřejná správa</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem
-						v-for="{id, name} in layers"
-						@click="addLayer(id)"
-						:disabled="pragueMap.activeLayers.has(id)"
-						>{{ name }}</DropdownMenuItem
+					<div
+						v-for="(value, key, index) in Object.groupBy(
+							layers,
+							({category}) => category
+						) as {[key: string]: Layer[]}"
 					>
-					<DropdownMenuItem>Magistrát</DropdownMenuItem>
-					<DropdownMenuItem>Team</DropdownMenuItem>
-					<DropdownMenuItem>Subscription</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuLabel>Kultura</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem>Divadla</DropdownMenuItem>
-					<DropdownMenuItem>Koncetry</DropdownMenuItem>
-					<DropdownMenuItem>Sport</DropdownMenuItem>
-					<DropdownMenuItem>Kino</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuLabel>Doprava</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem @click="pragueMap.addLayer('2')"
-						>Parkoviště</DropdownMenuItem
-					>
-					<DropdownMenuItem>Koncetry</DropdownMenuItem>
-					<DropdownMenuItem>Sport</DropdownMenuItem>
-					<DropdownMenuItem>Kino</DropdownMenuItem>
+						<DropdownMenuSeparator v-if="index !== 0" />
+						<DropdownMenuLabel>{{ key }}</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem
+							v-for="layer in value"
+							@click="addLayer(layer)"
+							:disabled="pragueMap.activeLayers.has(layer.id)"
+							>{{ layer.name }}</DropdownMenuItem
+						>
+					</div>
 				</DropdownMenuContent>
 			</DropdownMenu>
 			<Loader2 class="w-8 h-8 animate-spin" v-if="isLoading" />
 		</div>
-
-		<Card
-			v-for="[key, value] in Array.from(pragueMap.activeLayers.entries())"
-			:layer-id="key"
-			:layer-data="value"
-			@remove-layer="pragueMap.removeLayer(key)"
-		/>
+		<TransitionGroup name="cards" tag="div" class="relative">
+			<Card
+				v-for="[key, value] in Array.from(
+					pragueMap.activeLayers.entries()
+				)"
+				:key="key"
+				:layer-id="key"
+				:layer-data="value"
+				@remove-layer="pragueMap.removeLayer(key)"
+				class="mb-8"
+			/>
+		</TransitionGroup>
 	</div>
 </template>
+
+<style lang="scss">
+.cards-move,
+.cards-enter-active,
+.cards-leave-active {
+	transition: all 0.5s ease;
+}
+.cards-enter-from,
+.cards-leave-to {
+	opacity: 0;
+	transform: translateY(-30px);
+}
+
+.cards-leave-active {
+	position: absolute;
+}
+</style>
