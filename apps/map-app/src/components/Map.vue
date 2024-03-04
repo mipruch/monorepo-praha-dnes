@@ -1,82 +1,9 @@
 <script setup lang="ts">
 import {pragueMap} from "../stores/mapStore";
-import {h, onMounted, render} from "vue";
-import geojson from "../assets/geojson.json";
-import L from "leaflet";
-import Popup from "./Popup.vue";
-import "leaflet.markercluster";
-import "Leaflet.Deflate";
+import {onMounted} from "vue";
 
-var deflated: any;
 onMounted(() => {
 	pragueMap.initializeMap("viewDiv");
-
-	const color = "#FF0000";
-	const json = new L.GeoJSON(geojson, {
-		style: {
-			color: color,
-			weight: 2,
-			opacity: 1,
-			fillColor: color,
-			fillOpacity: 0.5,
-		},
-		pointToLayer: function (geoJsonPoint, latlng) {
-			return L.marker(latlng, {
-				icon: L.icon({
-					iconUrl: "marker-municipality.png",
-					iconSize: [30, 30], // size of the icon
-					iconAnchor: [15, 15], // point of the icon which will correspond to marker's location
-					popupAnchor: [0, -10], // point from which the popup should open relative to the iconAnchor)
-				}),
-			});
-		},
-		onEachFeature: (feature, layer) => {
-			// does this feature have a property named popupContent?
-			if (feature.properties && feature.properties.name) {
-				const popup = L.popup({
-					className: "custom-popup",
-					minWidth: 480,
-					content: `<div id="map-popup-${feature.properties.name}" />`,
-					pane: "popupPane",
-					closeButton: false,
-				});
-				layer.bindPopup(popup);
-
-				layer.on("click", (e) => {
-					render(
-						h(Popup, {properties: feature.properties}, null),
-						document.getElementById(
-							`map-popup-${feature.properties.name}`
-						)!
-					);
-				});
-			}
-		},
-	});
-	// const cluster = L.markerClusterGroup({
-	// 	showCoverageOnHover: false,
-	// 	spiderfyOnMaxZoom: true,
-	// 	iconCreateFunction(cluster) {
-	// 		return L.divIcon({
-	// 			html: `<div class='marker-cluster'>${cluster.getChildCount()}</div>`,
-	// 		});
-	// 	},
-	// });
-	deflated = L.deflate({
-		minSize: 100,
-		markerLayer: pragueMap.cluster,
-		markerOptions: {
-			icon: L.divIcon({
-				html: `<div class='deflate-icon' style='background-color:${color}'><img src="home.svg"></div>`,
-				iconSize: [30, 30], // size of the icon
-				iconAnchor: [15, 15], // point of the icon which will correspond to marker's location
-				popupAnchor: [0, -10], // point from which the popup should open relative to the iconAnchor)
-			}),
-		},
-	});
-	// json.addTo(deflated);
-
-	// deflated.addTo(pragueMap.map);
 });
 </script>
 
@@ -143,7 +70,7 @@ onMounted(() => {
 	@apply bg-green;
 }
 
-.deflate-icon {
+.marker-icon {
 	display: grid;
 	place-items: center;
 	justify-content: center;
@@ -151,7 +78,7 @@ onMounted(() => {
 	height: 30px;
 	border-radius: 50%;
 	img {
-		transform: translateY(-1px);
+		// transform: translateY(-1px);
 		height: 17px;
 	}
 }
