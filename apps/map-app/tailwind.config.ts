@@ -52,7 +52,7 @@ module.exports = {
 			},
 			grey: {
 				100: "#EEEEEE",
-				200: "#E3E3E3",
+				200: "#E3E3E3", // Šedá tiles
 				300: "#D3D3D3",
 				800: "#202020",
 			},

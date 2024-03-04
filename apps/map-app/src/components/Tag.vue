@@ -24,7 +24,7 @@ const colorScheme: {[key: string]: string} = {
 
 <template :slots="['name']">
 	<div
-		class="uppercase tracking-tag rounded-tag w-max pt-[0.4em] pb-[0.35em] pl-[0.9em] pr-[0.7em]"
+		class="uppercase tracking-tag rounded-tag h-min w-max pt-[0.4em] pb-[0.35em] pl-[0.9em] pr-[0.7em]"
 		:class="[props.big ? 'text-sm' : 'text-3sm', colorScheme[props.color]]"
 		v-if="props.text"
 	>
