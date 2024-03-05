@@ -18,7 +18,7 @@ onMounted(() => {
 				id="layersButton"
 				class="w-[100px] h-[100px] bg-foreground rounded-[var(--gap)] cursor-pointer grid items-center justify-center hover:opacity-75 transition-all duration-100 ease-in-out select-none"
 			>
-				<Layers color="white" size="36" />
+				<Layers color="white" :size="36" />
 			</div>
 			<div id="zoomGroup" class="grid items-end h-min gap-[7px]">
 				<div

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Tag from "./Tag.vue";
-import type {Layer} from "@/types";
+import type {Layer, ComponentFilter} from "@/types";
 import Tags from "./Tags.vue";
 
 const {properties, pref} = defineProps<{
@@ -31,7 +31,7 @@ function handleMapper(path: string) {
 	return result;
 }
 
-function handleTableValue(tableValue: object) {
+function handleTableValue(tableValue: string | ComponentFilter) {
 	if (typeof tableValue === "string") {
 		return handleMapper(tableValue);
 	}

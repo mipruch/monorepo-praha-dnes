@@ -14,7 +14,8 @@
     "prettier": "^3.1.1",
     "sass": "^1.71.1",
     "tsconfig": "*",
-    "turbo": "latest"
+    "turbo": "latest",
+    "typescript": "^5.4.0-beta"
   },
   "packageManager": "npm@10.2.0",
   "workspaces": [

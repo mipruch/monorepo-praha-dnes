@@ -17,10 +17,6 @@ import Card from "./Card.vue";
 
 import type {Layer} from "@/types";
 
-function refresh() {
-	console.log(pragueMap.layers);
-}
-
 function addLayer(value: Layer) {
 	isLoading.value = true;
 	pragueMap.addLayer(value).then(() => {
@@ -46,14 +42,14 @@ const isLoading = ref(false);
 						v-for="(value, key, index) in Object.groupBy(
 							layers,
 							({category}) => category
-						) as {[key: string]: Layer[]}"
+						)"
 					>
 						<DropdownMenuSeparator v-if="index !== 0" />
 						<DropdownMenuLabel>{{ key }}</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							v-for="layer in value"
-							@click="addLayer(layer)"
+							@click="addLayer(layer as unknown as Layer)"
 							:disabled="pragueMap.activeLayers.has(layer.id)"
 							>{{ layer.name }}</DropdownMenuItem
 						>

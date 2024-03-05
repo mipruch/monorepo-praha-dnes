@@ -18,7 +18,17 @@ export type Popup = {
 		warning: string;
 	};
 	table: {
-		valuePath: string;
-		unitPath: string;
-	}[];
+		[key: string]: string | ComponentFilter;
+	};
+	image: string;
+};
+
+export type ComponentFilter = {
+	arrayPath: string;
+	where: {
+		path: string;
+		equals: string;
+	};
+	valuePath: string;
+	unitPath: string;
 };
