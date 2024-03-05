@@ -64,7 +64,6 @@ const isLoading = ref(false);
 					pragueMap.activeLayers.entries()
 				)"
 				:key="key"
-				:layer-id="key"
 				:layer-data="value"
 				@remove-layer="pragueMap.removeLayer(key)"
 				class="mb-8"

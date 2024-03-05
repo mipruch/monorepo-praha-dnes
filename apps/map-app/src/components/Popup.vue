@@ -17,7 +17,6 @@ function handleMapper(path: string) {
 	for (let i = 0; i < length; i++) {
 		result = result[splitted[i]];
 	}
-	console.log(result);
 
 	if (!result) return "N/A";
 	if (Array.isArray(result) && result.length === 0) {

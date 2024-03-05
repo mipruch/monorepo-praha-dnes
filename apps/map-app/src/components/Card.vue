@@ -6,8 +6,7 @@ import {Trash2} from "lucide-vue-next";
 
 defineEmits(["removeLayer"]);
 
-const {layerData, layerId} = defineProps<{
-	layerId: string;
+const {layerData} = defineProps<{
 	layerData: {
 		pref: any;
 		res: any;
@@ -39,9 +38,10 @@ const {layerData, layerId} = defineProps<{
 					<Trash2 />
 				</Button>
 			</div>
-			<div class="pl-1 mb-8">
+			<p class="pl-1 mb-8">
 				{{ layerData.pref.paragraph }}
-			</div>
+			</p>
+			<div>Grafy</div>
 		</div>
 	</div>
 </template>

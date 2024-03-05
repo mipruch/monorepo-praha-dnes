@@ -108,7 +108,6 @@ class PragueMap {
 			pref,
 			res,
 		});
-		console.log(collection);
 		collection.addTo(this.cluster);
 	}
 
@@ -125,7 +124,6 @@ class PragueMap {
 export const pragueMap = PragueMap.getInstance();
 
 async function makeLayer(pref: any) {
-	console.log(pref);
 	const res = await fetchData(pref.fetchUrl);
 	const color = pref.color;
 	const json = new L.GeoJSON(res, {
