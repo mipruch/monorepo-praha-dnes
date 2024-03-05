@@ -16,13 +16,13 @@ const {layerData, layerId} = defineProps<{
 </script>
 
 <template>
-	<div class="p-4 bg-grey-200 rounded-lg mb-8">
+	<div class="p-4 bg-grey-200 rounded-lg">
 		<div>
 			<div class="flex flex-row justify-between pb-4">
 				<Tags big v-slot="slotProps">
 					<Tag
 						color="green"
-						:text="layerData.pref.name"
+						:text="layerData.pref.category"
 						:big="slotProps.big"
 					/>
 					<Tag

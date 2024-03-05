@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {pragueMap} from "../stores/mapStore";
 import {onMounted} from "vue";
+import {Layers} from "lucide-vue-next";
 
 onMounted(() => {
 	pragueMap.initializeMap("viewDiv");
@@ -15,8 +16,10 @@ onMounted(() => {
 		>
 			<div
 				id="layersButton"
-				class="w-[100px] h-[100px] bg-foreground rounded-[var(--gap)] cursor-pointer"
-			/>
+				class="w-[100px] h-[100px] bg-foreground rounded-[var(--gap)] cursor-pointer grid items-center justify-center hover:opacity-75 transition-all duration-100 ease-in-out select-none"
+			>
+				<Layers color="white" size="36" />
+			</div>
 			<div id="zoomGroup" class="grid items-end h-min gap-[7px]">
 				<div
 					class="w-8 h-8 bg-foreground leading-none rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"

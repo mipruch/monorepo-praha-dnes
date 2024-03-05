@@ -16,7 +16,7 @@ const props = defineProps({
 
 const colorScheme: {[key: string]: string} = {
 	green: "bg-green text-black",
-	dark: "bg-grey-dark text-white",
+	dark: "bg-grey-800 text-white",
 	light: "bg-grey-300 text-black",
 	notice: "bg-[#FF5A00] text-black",
 };
