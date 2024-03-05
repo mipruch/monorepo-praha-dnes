@@ -4,7 +4,7 @@ import "leaflet";
 import "leaflet.markercluster";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import preferences from "./preferences.json";
+import type {Layer} from "@/types";
 
 const L = window["L"];
 
@@ -92,24 +92,23 @@ class PragueMap {
 		}
 	> = reactive(new Map());
 
-	public async addLayer(id: string) {
-		const pref = preferences.find((pref) => pref.id === id);
-		console.log(pref);
+	public async addLayer(pref: Layer) {
 		if (!pref) {
-			console.error(`Nebyla nalezena vrstva s id ${id}.`);
+			console.error("Chyba při načítání mapy.");
 			return;
 		}
-		if (this.layersData.layers.find((layer) => layer.id === id)) {
-			console.error(`Vrstva s id ${id} již byla přidána.`);
+		if (this.layersData.layers.find((layer) => layer.id === pref.id)) {
+			console.error(`Vrstva s id ${pref.id} již byla přidána.`);
 			return;
 		}
 
 		const [collection, res] = await makeLayer(pref);
-		this.layersData.layers.push({id: id, collection: collection});
-		this.activeLayers.set(id, {
+		this.layersData.layers.push({id: pref.id, collection: collection});
+		this.activeLayers.set(pref.id, {
 			pref,
 			res,
 		});
+		console.log(collection);
 		collection.addTo(this.cluster);
 	}
 
@@ -126,6 +125,7 @@ class PragueMap {
 export const pragueMap = PragueMap.getInstance();
 
 async function makeLayer(pref: any) {
+	console.log(pref);
 	const res = await fetchData(pref.fetchUrl);
 	const color = pref.color;
 	const json = new L.GeoJSON(res, {
@@ -165,6 +165,7 @@ async function makeLayer(pref: any) {
 							Popup,
 							{
 								properties: feature.properties,
+								pref: pref,
 								color: color,
 							} as any,
 							undefined

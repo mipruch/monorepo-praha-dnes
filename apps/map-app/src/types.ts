@@ -5,6 +5,20 @@ export type Layer = {
 	color: string;
 	fetchUrl: string;
 	iconUrl: string;
-	popupMaper: string;
+	popupMapper: Popup;
 	category: string;
+};
+
+export type Popup = {
+	name: string;
+	title: string;
+	paragraph: string;
+	tags: {
+		tertiary: string;
+		warning: string;
+	};
+	table: {
+		valuePath: string;
+		unitPath: string;
+	}[];
 };
