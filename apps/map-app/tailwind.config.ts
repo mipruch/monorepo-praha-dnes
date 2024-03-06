@@ -51,10 +51,16 @@ module.exports = {
 				light: "#B4D2FF",
 			},
 			grey: {
+				50: "#F2F2F2",
 				100: "#EEEEEE",
 				200: "#E3E3E3", // Šedá tiles
 				300: "#D3D3D3",
+				400: "#B3B3B3",
+				500: "#9E9E9E",
+				600: "#757575",
+				700: "#282828",
 				800: "#202020",
+				900: "#1A1A1A",
 			},
 			background: "hsl(var(--background))",
 			foreground: "hsl(var(--foreground))",
