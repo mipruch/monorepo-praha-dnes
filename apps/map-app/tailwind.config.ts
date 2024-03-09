@@ -17,7 +17,7 @@ module.exports = {
 			"4sm": "0.5996rem", // extra extra extra small
 			"3sm": "0.6815rem", // extra extra small
 			"2sm": "0.7744rem", // extra small
-			sm: "0.88rem", // small
+			sm: ["0.8rem", "150%"], // small
 			base: "1rem", // p
 			lg: "1.2rem", // h6
 			xl: "1.44rem", // h5
