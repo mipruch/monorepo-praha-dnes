@@ -76,9 +76,10 @@
 	html {
 		font-size: 17px;
 		box-sizing: border-box;
+		@apply bg-black;
 	}
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-black text-foreground;
 	}
 
 	h1 {
