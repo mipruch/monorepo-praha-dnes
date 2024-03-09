@@ -28,7 +28,9 @@ const isLoading = ref(false);
 </script>
 
 <template>
-	<div class="bg-background rounded-[var(--gap)] p-7">
+	<div
+		class="bg-background rounded-[var(--gap)] p-7 h-full overflow-y-scroll"
+	>
 		<div class="flex flex-row items-center mb-12">
 			<DropdownMenu>
 				<DropdownMenuTrigger class="mr-4 flex"
@@ -67,6 +69,11 @@ const isLoading = ref(false);
 				:layer-data="value"
 				@remove-layer="pragueMap.removeLayer(key)"
 				class="mb-8"
+			/>
+			<Card
+				:layer-data="{pref: layers[0]}"
+				class="mb-8"
+				key="testovaci"
 			/>
 		</TransitionGroup>
 	</div>
