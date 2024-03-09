@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue";
+import {calculatePercentage} from "@/lib/utils";
 
 const props = defineProps<{
 	graph: {
@@ -12,39 +13,6 @@ const props = defineProps<{
 
 if (props.graph.strokeColor == undefined) {
 	props.graph.strokeColor = "#0066FF";
-}
-
-function calculatePercentage(
-	currentValue: number,
-	minValue: number | undefined,
-	maxValue: number | undefined
-) {
-	const minGraph = 0; //  Minimální hodnota grafu
-	const maxGraph = 100; // Maximální hodnota grafu
-
-	if (minValue == undefined || maxValue == undefined) {
-		minValue = 0;
-		maxValue = 100;
-	}
-
-	// Kontrola, zda hodnoty splňují očekávané podmínky
-	if (minValue >= maxValue) {
-		throw new Error(
-			"Minimální hodnota musí být menší než maximální hodnota."
-		);
-	}
-
-	// Kontrola hraničních hodnot
-	if (currentValue < minValue) return minGraph;
-	if (currentValue > maxValue) return maxGraph;
-
-	// Vypočet procentuální pozice aktuální hodnoty mezi minimální a maximální hodnotou
-	const percentage = (currentValue - minValue) / (maxValue - minValue);
-
-	// Vypočet odpovídající pixelové hodnoty pro vypočtené procento
-	const left = (maxGraph - minGraph) * percentage + minGraph;
-
-	return left;
 }
 
 const percentage = computed(() => {
