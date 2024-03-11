@@ -50,7 +50,7 @@ const {layerData} = defineProps<{
 				class="grid grid-flow-col grid-rows-2 gap-[10px]"
 			>
 				<WidgetSmall
-					v-for="widget in layerData.pref.widgets.small"
+					v-for="widget in layerData.pref.widgets?.small"
 					:title="widget.title"
 					:value="widget.value"
 					:text="widget.text"
@@ -61,7 +61,7 @@ const {layerData} = defineProps<{
 				class="grid grid-flow-col grid-rows-2 gap-[10px]"
 			>
 				<WidgetMedium
-					v-for="widget in layerData.pref.widgets.medium"
+					v-for="widget in layerData.pref.widgets?.medium"
 					:title="widget.title"
 					:graph="widget.graph"
 					:description="widget.description"
@@ -72,7 +72,7 @@ const {layerData} = defineProps<{
 				class="grid grid-flow-col grid-rows-1 gap-[10px]"
 			>
 				<WidgetLarge
-					v-for="widget in layerData.pref.widgets.large"
+					v-for="widget in layerData.pref.widgets?.large"
 					:title="widget.title"
 					:graph="widget.graph"
 				/>
