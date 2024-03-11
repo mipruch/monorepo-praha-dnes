@@ -24,17 +24,20 @@ const percentage = computed(() => {
 });
 
 const options = {
-	states: "none",
-	chart: {
-		type: "radialBar",
-		animations: {
-			enabled: true,
-			easing: "easeinout",
-			dynamicAnimation: {
-				enabled: true,
-				speed: 350,
+	states: {
+		hover: {
+			filter: {
+				type: "none",
 			},
 		},
+		active: {
+			filter: {
+				type: "none",
+			},
+		},
+	},
+	chart: {
+		type: "radialBar",
 	},
 	plotOptions: {
 		radialBar: {
