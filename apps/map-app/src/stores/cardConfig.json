@@ -211,6 +211,100 @@
 				}
 			}
 		},
-		"category": "Počasí"
+		"category": "Počasí",
+		"widgets": {
+			"small": [
+				{
+					"title": "Průměrná hodnota PM10",
+					"value": {
+						"mathOperation": "average",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "PM10"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Průměrná hodnota PM10."
+				},
+				{
+					"title": "Průměrná hodnota PM2.5",
+					"value": {
+						"mathOperation": "average",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "PM2_5"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Průměrná hodnota PM2.5."
+				},
+				{
+					"title": "Průměrná hodnota NO2",
+					"value": {
+						"mathOperation": "average",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "PM2_5"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Průměrná hodnota NO2."
+				},
+				{
+					"title": "Průměrná hodnota O3",
+					"value": {
+						"mathOperation": "average",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "PM2_5"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Průměrná hodnota O3."
+				},
+				{
+					"title": "Průměrná hodnota SO2",
+					"value": {
+						"mathOperation": "average",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "PM2_5"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Průměrná hodnota SO2."
+				},
+				{
+					"title": "Suma hodnot PM2.5",
+					"value": {
+						"mathOperation": "sum",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "PM2_5"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Suma hodnot PM2.5."
+				}
+			]
+		}
 	}
 ]

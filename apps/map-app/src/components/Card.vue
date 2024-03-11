@@ -11,9 +11,60 @@ defineEmits(["removeLayer"]);
 const {layerData} = defineProps<{
 	layerData: {
 		pref: any;
-		// res: any;
+		res: any;
 	};
 }>();
+
+function handleValue(value: string | any) {
+	if (typeof value === "string") {
+		return value;
+	}
+
+	if (typeof value === "object") {
+		const pathToAttribute = value.attributePath.arrayPath.split(".");
+
+		const arrayOfValues: number[] = [];
+
+		layerData.res.features.forEach((feature: any) => {
+			const array = pathToAttribute.reduce(
+				(acc: any, curr: any) => acc[curr],
+				feature.properties
+			);
+
+			array.forEach((component: any) => {
+				const pathToType = value.attributePath.where.path.split(".");
+
+				const foundCategory = pathToType.reduce(
+					(acc: any, curr: any) => acc[curr],
+					component
+				);
+				if (foundCategory === value.attributePath.where.equals) {
+					const pathToValue =
+						value.attributePath.valuePath.split(".");
+					const foundValue = pathToValue.reduce(
+						(acc: any, curr: any) => acc[curr],
+						component
+					);
+					arrayOfValues.push(foundValue);
+				}
+			});
+		});
+
+		const mathOperation = value.mathOperation;
+
+		let returnValue;
+		if (mathOperation === "sum") {
+			returnValue = arrayOfValues.reduce((a: any, b: any) => a + b, 0);
+		}
+		if (mathOperation === "average") {
+			returnValue =
+				arrayOfValues.reduce((a: any, b: any) => a + b, 0) /
+				arrayOfValues.length;
+		}
+
+		return returnValue.toFixed(2);
+	}
+}
 </script>
 
 <template>
@@ -52,7 +103,7 @@ const {layerData} = defineProps<{
 				<WidgetSmall
 					v-for="widget in layerData.pref.widgets?.small"
 					:title="widget.title"
-					:value="widget.value"
+					:value="handleValue(widget.value)"
 					:text="widget.text"
 				/>
 			</div>
