@@ -15,55 +15,85 @@ const {layerData} = defineProps<{
 	};
 }>();
 
-function handleValue(value: string | any) {
-	if (typeof value === "string") {
+interface ValueDefinition {
+	mathOperation: "sum" | "average";
+	attributePath: {
+		arrayPath: string;
+		where: {
+			path: string;
+			equals: string;
+		};
+		valuePath: string;
+	};
+}
+
+function handleValue(
+	value: string | number | ValueDefinition
+): string | number {
+	if (typeof value === "string" || typeof value === "number") {
 		return value;
 	}
 
-	if (typeof value === "object") {
-		const pathToAttribute = value.attributePath.arrayPath.split(".");
+	// Na základě konfigurčního souboru získáme toužené hodnoty z nafetchovaných dat (z geojson features)
+	const arrayOfValues = extractValuesFromLayerData(value);
 
-		const arrayOfValues: number[] = [];
+	// Provedeme matematickou operaci nad hodnotami
+	const result = performMathOperation(arrayOfValues, value.mathOperation);
 
-		layerData.res.features.forEach((feature: any) => {
-			const array = pathToAttribute.reduce(
-				(acc: any, curr: any) => acc[curr],
-				feature.properties
-			);
+	return formatNumber(result, 2);
+}
 
-			array.forEach((component: any) => {
-				const pathToType = value.attributePath.where.path.split(".");
+function extractValuesFromLayerData(value: ValueDefinition): any[] {
+	const pathToAttribute = value.attributePath.arrayPath.split(".");
+	const arrayOfValues: any[] = [];
 
-				const foundCategory = pathToType.reduce(
-					(acc: any, curr: any) => acc[curr],
-					component
+	layerData.res.features.forEach((feature: any) => {
+		const arrayOfMeasurements = resolvePath(
+			feature.properties,
+			pathToAttribute
+		);
+
+		arrayOfMeasurements.forEach((measurement: any) => {
+			if (matchesCondition(measurement, value.attributePath.where)) {
+				const foundValue = resolvePath(
+					measurement,
+					value.attributePath.valuePath.split(".")
 				);
-				if (foundCategory === value.attributePath.where.equals) {
-					const pathToValue =
-						value.attributePath.valuePath.split(".");
-					const foundValue = pathToValue.reduce(
-						(acc: any, curr: any) => acc[curr],
-						component
-					);
-					arrayOfValues.push(foundValue);
-				}
-			});
+				arrayOfValues.push(foundValue);
+			}
 		});
+	});
 
-		const mathOperation = value.mathOperation;
+	return arrayOfValues;
+}
 
-		let returnValue;
-		if (mathOperation === "sum") {
-			returnValue = arrayOfValues.reduce((a: any, b: any) => a + b, 0);
-		}
-		if (mathOperation === "average") {
-			returnValue =
-				arrayOfValues.reduce((a: any, b: any) => a + b, 0) /
-				arrayOfValues.length;
-		}
+function performMathOperation(
+	values: any[],
+	operation: "sum" | "average"
+): number {
+	const sum = values.reduce((a: any, b: any) => a + b, 0);
 
-		return returnValue.toFixed(2);
+	if (operation === "average") {
+		return values.length ? sum / values.length : 0;
 	}
+
+	return sum;
+}
+
+function matchesCondition(
+	component: any,
+	where: {path: string; equals: string}
+): boolean {
+	const value = resolvePath(component, where.path.split("."));
+	return value === where.equals;
+}
+
+function resolvePath(object: any, path: string[]): any {
+	return path.reduce((acc: any, curr: string) => acc[curr], object);
+}
+
+function formatNumber(number: number, decimals: number): string {
+	return number.toFixed(decimals);
 }
 </script>
 
