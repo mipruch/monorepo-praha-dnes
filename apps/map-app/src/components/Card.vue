@@ -15,17 +15,19 @@ const {layerData} = defineProps<{
 	};
 }>();
 
-interface ValueDefinition {
-	mathOperation: "sum" | "average";
-	attributePath: {
-		arrayPath: string;
-		where: {
-			path: string;
-			equals: string;
-		};
-		valuePath: string;
-	};
-}
+type ValueDefinition = {
+	mathOperation: "sum" | "average" | "count";
+	attributePath:
+		| {
+				arrayPath: string;
+				where: {
+					path: string;
+					equals: string;
+				};
+				valuePath: string;
+		  }
+		| string;
+};
 
 function handleValue(
 	value: string | number | ValueDefinition
@@ -34,17 +36,38 @@ function handleValue(
 		return value;
 	}
 
+	if (value.mathOperation === "count") {
+		return layerData.res.features.length;
+	}
+
 	// Na základě konfigurčního souboru získáme toužené hodnoty z nafetchovaných dat (z geojson features)
 	const arrayOfValues = extractValuesFromLayerData(value);
 
 	// Provedeme matematickou operaci nad hodnotami
 	const result = performMathOperation(arrayOfValues, value.mathOperation);
 
-	return formatNumber(result, 2);
+	return formatNumber(result, 1);
 }
 
 function extractValuesFromLayerData(value: ValueDefinition): any[] {
-	const pathToAttribute = value.attributePath.arrayPath.split(".");
+	// Pokud je value.attributePath string, znamená to, že se jedná o přímý přístup k hodnotě
+	if (typeof value.attributePath === "string") {
+		const arr = layerData.res.features.map((feature: any) => {
+			const val = feature.properties[value.attributePath as string];
+			if (val === undefined || val === null) return null;
+			return val;
+		});
+		return arr;
+	}
+
+	// Pokud je value.attributePath objekt, znamená to, že se jedná o složitější operaci
+
+	const attributePath = value.attributePath as {
+		arrayPath: string;
+		where: {path: string; equals: string};
+		valuePath: string;
+	};
+	const pathToAttribute = attributePath.arrayPath?.split(".") || [];
 	const arrayOfValues: any[] = [];
 
 	layerData.res.features.forEach((feature: any) => {
@@ -54,16 +77,15 @@ function extractValuesFromLayerData(value: ValueDefinition): any[] {
 		);
 
 		arrayOfMeasurements.forEach((measurement: any) => {
-			if (matchesCondition(measurement, value.attributePath.where)) {
+			if (matchesCondition(measurement, attributePath.where)) {
 				const foundValue = resolvePath(
 					measurement,
-					value.attributePath.valuePath.split(".")
+					attributePath.valuePath.split(".")
 				);
 				arrayOfValues.push(foundValue);
 			}
 		});
 	});
-
 	return arrayOfValues;
 }
 
@@ -93,6 +115,10 @@ function resolvePath(object: any, path: string[]): any {
 }
 
 function formatNumber(number: number, decimals: number): string {
+	// Pokud je číslo celé, vrátíme ho v nezměněné podobě
+	if (number % 1 === 0) {
+		return number.toString();
+	}
 	return number.toFixed(decimals);
 }
 </script>

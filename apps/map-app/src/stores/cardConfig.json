@@ -147,7 +147,34 @@
 				"Aktualizováno": "date_modified"
 			}
 		},
-		"category": "Dopravní informace a mobilita"
+		"category": "Dopravní informace a mobilita",
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet výsledků",
+					"value": {
+						"mathOperation": "count"
+					},
+					"text": "Celkový počet záznamů."
+				},
+				{
+					"title": "Celkový počet volných míst",
+					"value": {
+						"mathOperation": "sum",
+						"attributePath": "available_spots_number"
+					},
+					"text": "Celkový počet volných míst."
+				},
+				{
+					"title": "Celkový počet míst",
+					"value": {
+						"mathOperation": "sum",
+						"attributePath": "total_spot_number"
+					},
+					"text": "Celkový počet míst."
+				}
+			]
+		}
 	},
 
 	{
@@ -215,6 +242,13 @@
 		"widgets": {
 			"small": [
 				{
+					"title": "Počet výsledků",
+					"value": {
+						"mathOperation": "count"
+					},
+					"text": "Celkový počet senzorů."
+				},
+				{
 					"title": "Průměrná hodnota PM10",
 					"value": {
 						"mathOperation": "average",
@@ -252,7 +286,7 @@
 							"arrayPath": "measurement.components",
 							"where": {
 								"path": "type",
-								"equals": "PM2_5"
+								"equals": "NO2"
 							},
 							"valuePath": "averaged_time.value"
 						}
@@ -267,7 +301,7 @@
 							"arrayPath": "measurement.components",
 							"where": {
 								"path": "type",
-								"equals": "PM2_5"
+								"equals": "O3"
 							},
 							"valuePath": "averaged_time.value"
 						}
@@ -282,7 +316,7 @@
 							"arrayPath": "measurement.components",
 							"where": {
 								"path": "type",
-								"equals": "PM2_5"
+								"equals": "SO2"
 							},
 							"valuePath": "averaged_time.value"
 						}
