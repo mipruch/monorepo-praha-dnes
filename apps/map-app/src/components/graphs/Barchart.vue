@@ -4,7 +4,7 @@ const props = defineProps<{
 	graph: any;
 }>();
 
-function dataPointSelection(event, chartContext, config) {
+function dataPointSelection(event: any, chartContext: any, config: any) {
 	// ...
 	updatePastValue(config.dataPointIndex);
 }
@@ -34,16 +34,6 @@ const chartOptions = {
 
 		zoom: {
 			enabled: false,
-		},
-		events: {
-			dataPointSelection: function (event, chartContext, config) {
-				// ...
-				console.log("event");
-			},
-			click: function (event, chartContext, config) {
-				// The last parameter config contains additional information like `seriesIndex` and `dataPointIndex` for cartesian charts
-				console.log("click");
-			},
 		},
 	},
 	plotOptions: {
