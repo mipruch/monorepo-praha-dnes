@@ -3,19 +3,128 @@ import Tag from "./Tag.vue";
 import Tags from "./Tags.vue";
 import Button from "./ui/button/Button.vue";
 import {Trash2} from "lucide-vue-next";
+import WidgetMedium from "./WidgetMedium.vue";
+import WidgetSmall from "./WidgetSmall.vue";
+import WidgetLarge from "./WidgetLarge.vue";
 
 defineEmits(["removeLayer"]);
-
 const {layerData} = defineProps<{
 	layerData: {
 		pref: any;
 		res: any;
 	};
 }>();
+
+type ValueDefinition = {
+	mathOperation: "sum" | "average" | "count";
+	attributePath:
+		| {
+				arrayPath: string;
+				where: {
+					path: string;
+					equals: string;
+				};
+				valuePath: string;
+		  }
+		| string;
+};
+
+function handleValue(
+	value: string | number | ValueDefinition
+): string | number {
+	if (typeof value === "string" || typeof value === "number") {
+		return value;
+	}
+
+	if (value.mathOperation === "count") {
+		return layerData.res.features.length;
+	}
+
+	// Na základě konfigurčního souboru získáme toužené hodnoty z nafetchovaných dat (z geojson features)
+	const arrayOfValues = extractValuesFromLayerData(value);
+
+	// Provedeme matematickou operaci nad hodnotami
+	const result = performMathOperation(arrayOfValues, value.mathOperation);
+
+	return formatNumber(result, 1);
+}
+
+function extractValuesFromLayerData(value: ValueDefinition): any[] {
+	// Pokud je value.attributePath string, znamená to, že se jedná o přímý přístup k hodnotě
+	if (typeof value.attributePath === "string") {
+		const arr = layerData.res.features.map((feature: any) => {
+			const val = feature.properties[value.attributePath as string];
+			if (val === undefined || val === null) return null;
+			return val;
+		});
+		return arr;
+	}
+
+	// Pokud je value.attributePath objekt, znamená to, že se jedná o složitější operaci
+
+	const attributePath = value.attributePath as {
+		arrayPath: string;
+		where: {path: string; equals: string};
+		valuePath: string;
+	};
+	const pathToAttribute = attributePath.arrayPath?.split(".") || [];
+	const arrayOfValues: any[] = [];
+
+	layerData.res.features.forEach((feature: any) => {
+		const arrayOfMeasurements = resolvePath(
+			feature.properties,
+			pathToAttribute
+		);
+
+		arrayOfMeasurements.forEach((measurement: any) => {
+			if (matchesCondition(measurement, attributePath.where)) {
+				const foundValue = resolvePath(
+					measurement,
+					attributePath.valuePath.split(".")
+				);
+				arrayOfValues.push(foundValue);
+			}
+		});
+	});
+	return arrayOfValues;
+}
+
+function performMathOperation(
+	values: any[],
+	operation: "sum" | "average"
+): number {
+	const sum = values.reduce((a: any, b: any) => a + b, 0);
+
+	if (operation === "average") {
+		return values.length ? sum / values.length : 0;
+	}
+
+	return sum;
+}
+
+function matchesCondition(
+	component: any,
+	where: {path: string; equals: string}
+): boolean {
+	const value = resolvePath(component, where.path.split("."));
+	return value === where.equals;
+}
+
+function resolvePath(object: any, path: string[]): any {
+	return path.reduce((acc: any, curr: string) => acc[curr], object);
+}
+
+function formatNumber(number: number, decimals: number): string {
+	// Pokud je číslo celé, vrátíme ho v nezměněné podobě
+	if (number % 1 === 0) {
+		return number.toString();
+	}
+	return number.toFixed(decimals);
+}
 </script>
 
 <template>
-	<div class="p-4 bg-grey-200 rounded-lg">
+	<div class="p-4 bg-grey-200 dark:bg-grey-700 rounded-lg">
 		<div>
 			<div class="flex flex-row justify-between pb-4">
 				<Tags big v-slot="slotProps">
@@ -41,7 +150,40 @@ const {layerData} = defineProps<{
 			<p class="pl-1 mb-8">
 				{{ layerData.pref.paragraph }}
 			</p>
-			<div>Grafy</div>
+		</div>
+		<div class="w-full overflow-x-scroll flex flex-row gap-[10px]">
+			<div
+				id="widgets-small"
+				class="grid grid-flow-col grid-rows-2 gap-[10px]"
+			>
+				<WidgetSmall
+					v-for="widget in layerData.pref.widgets?.small"
+					:title="widget.title"
+					:value="handleValue(widget.value)"
+					:text="widget.text"
+				/>
+			</div>
+			<div
+				id="widgets-medium"
+				class="grid grid-flow-col grid-rows-2 gap-[10px]"
+			>
+				<WidgetMedium
+					v-for="widget in layerData.pref.widgets?.medium"
+					:title="widget.title"
+					:graph="widget.graph"
+					:description="widget.description"
+				/>
+			</div>
+			<div
+				id="widgets-large"
+				class="grid grid-flow-col grid-rows-1 gap-[10px]"
+			>
+				<WidgetLarge
+					v-for="widget in layerData.pref.widgets?.large"
+					:title="widget.title"
+					:graph="widget.graph"
+				/>
+			</div>
 		</div>
 	</div>
 </template>

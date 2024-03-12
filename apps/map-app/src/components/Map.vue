@@ -70,7 +70,7 @@ onMounted(() => {
 	width: 26px;
 	height: 26px;
 	border-radius: 5px;
-	@apply bg-green;
+	@apply bg-green dark:text-black;
 }
 
 .marker-icon {

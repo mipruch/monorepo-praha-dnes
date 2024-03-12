@@ -11,8 +11,8 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {pragueMap} from "../stores/mapStore";
-import {ref, watch} from "vue";
-import layers from "@/stores/preferences.json";
+import {ref} from "vue";
+import cardConfig from "@/stores/cardConfig.json";
 import Card from "./Card.vue";
 
 import type {Layer} from "@/types";
@@ -28,7 +28,9 @@ const isLoading = ref(false);
 </script>
 
 <template>
-	<div class="bg-background rounded-[var(--gap)] p-7">
+	<div
+		class="bg-background rounded-[var(--gap)] p-7 h-full overflow-y-scroll"
+	>
 		<div class="flex flex-row items-center mb-12">
 			<DropdownMenu>
 				<DropdownMenuTrigger class="mr-4 flex"
@@ -40,7 +42,7 @@ const isLoading = ref(false);
 				<DropdownMenuContent>
 					<div
 						v-for="(value, key, index) in Object.groupBy(
-							layers,
+							cardConfig,
 							({category}) => category
 						)"
 					>
@@ -68,6 +70,11 @@ const isLoading = ref(false);
 				@remove-layer="pragueMap.removeLayer(key)"
 				class="mb-8"
 			/>
+			<!-- <Card
+				:layer-data="{pref: cardConfig[0]}"
+				class="mb-8"
+				key="testovaci"
+			/> -->
 		</TransitionGroup>
 	</div>
 </template>

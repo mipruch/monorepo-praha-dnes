@@ -1,0 +1,344 @@
+[
+	{
+		"id": "verejna-sprava",
+		"name": "Veřejná správa",
+		"paragraph": "Veřejná správa. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
+		"color": "#FF5A00",
+		"fetchUrl": "https://api.golemio.cz/v2/municipalauthorities/",
+		"iconUrl": "home.svg",
+		"popupMapper": {
+			"name": "name",
+			"tags": {
+				"tertiary": "type.description",
+				"warning": ""
+			},
+			"image": "image.url",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Web": "web",
+				"Telefon": "telephone",
+				"Aktualizováno": "updated_at"
+			}
+		},
+		"category": "Městské informace",
+		"widgets": {
+			"small": [
+				{
+					"title": "Aktuální průměrná cena parkování",
+					"value": "32,7",
+					"text": "korun za hodinu."
+				},
+				{
+					"title": "Počet otevřených parkovišť",
+					"value": "106",
+					"text": "z celkového počtu 120 parkovišť."
+				}
+			],
+			"medium": [
+				{
+					"title": "PM2.5",
+					"graph": {
+						"type": "Area",
+						"size": "small",
+						"series": [
+							{
+								"name": "PM2.5",
+								"data": [30, 91, 45, 80, 50, 30, 70, 60, 100]
+							}
+						],
+						"xcategories": [
+							"1.1.",
+							"2.1.",
+							"3.1.",
+							"4.1.",
+							"5.1.",
+							"6.1.",
+							"7.1.",
+							"8.1.",
+							"9.1."
+						]
+					}
+				},
+				{
+					"title": "PM2.5",
+					"description": "Aktuální hodnota PM2.5 je  mq/m3. Fugiat nisi ullamco elit est dolore occaecat.",
+					"graph": {
+						"type": "Nearby"
+					}
+				},
+				{
+					"title": "PM2.5",
+					"description": "Aktuální hodnota PM2.5 je {{value}} mq/m3. Fugiat nisi ullamco elit est dolore occaecat.",
+					"graph": {
+						"type": "Bar",
+						"value": 10,
+						"strokeColor": "linear-gradient(to right,#ff5a00,#cace00,#00ed00,#00b8a2,#0066ff)"
+					}
+				},
+				{
+					"title": "Vytíženost parkovišť",
+					"description": "Vytíženost všech parkovišť dohromady je {{value}} %.",
+					"graph": {
+						"type": "Tachometer",
+						"value": 26,
+						"minValue": 18,
+						"maxValue": 28,
+						"unit": "°",
+						"colorScheme": "blue"
+					}
+				},
+				{
+					"title": "Vytíženost parkovišť",
+					"description": "Vytíženost všech parkovišť dohromady je {{value}} %.",
+					"graph": {
+						"type": "Ring",
+						"value": 49,
+						"strokeColor": "blue"
+					}
+				}
+			],
+			"large": [
+				{
+					"title": "Nejméně vytížená parkoviště",
+					"graph": {
+						"type": "List",
+						"paragraph": "Seznam parkovišt s největším počtem volných míst:",
+						"items": [
+							"Přátelství 356/61",
+							"Pražská 356/61",
+							"Pražská 356/61",
+							"Pražská 356/61",
+							"Pražská 356/61"
+						]
+					}
+				},
+				{
+					"title": "Nejméně vytížená parkoviště",
+					"graph": {
+						"type": "Bar",
+						"size": "small",
+						"series": [
+							{
+								"data": [30, 91, 45, 80, 50, 30, 70, 60, 100]
+							}
+						],
+						"unit": "Kč"
+					}
+				}
+			]
+		}
+	},
+	{
+		"id": "parkoviste",
+		"name": "Parkoviště",
+		"paragraph": "Parkoviště. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
+		"color": "#0066FF",
+		"fetchUrl": "https://api.golemio.cz/v2/parking/",
+		"iconUrl": "parking.svg",
+		"popupMapper": {
+			"name": "name",
+			"tags": {
+				"tertiary": "",
+				"warning": ""
+			},
+			"table": {
+				"Adresa": "address_formatted",
+				"Celkový počet míst": "total_spot_number",
+				"Aktualizováno": "date_modified"
+			}
+		},
+		"category": "Dopravní informace a mobilita",
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet výsledků",
+					"value": {
+						"mathOperation": "count"
+					},
+					"text": "Celkový počet záznamů."
+				},
+				{
+					"title": "Celkový počet volných míst",
+					"value": {
+						"mathOperation": "sum",
+						"attributePath": "available_spots_number"
+					},
+					"text": "Celkový počet volných míst."
+				},
+				{
+					"title": "Celkový počet míst",
+					"value": {
+						"mathOperation": "sum",
+						"attributePath": "total_spot_number"
+					},
+					"text": "Celkový počet míst."
+				}
+			]
+		}
+	},
+
+	{
+		"id": "kvalita-ovzdusi",
+		"name": "Kvalita ovzduší",
+		"paragraph": "Mikroklima. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
+		"color": "#FFCE1F",
+		"fetchUrl": "https://api.golemio.cz/v2/airqualitystations/",
+		"iconUrl": "climate.svg",
+		"popupMapper": {
+			"name": "name",
+			"table": {
+				"ID": "id",
+				"Městská část": "district",
+				"Aktualizováno": "updated_at",
+				"Index kvality ovzduší": "measurement.AQ_hourly_index",
+				"PM10": {
+					"arrayPath": "measurement.components",
+					"where": {
+						"path": "type",
+						"equals": "PM10"
+					},
+					"valuePath": "averaged_time.value",
+					"unitPath": ""
+				},
+				"PM2.5": {
+					"arrayPath": "measurement.components",
+					"where": {
+						"path": "type",
+						"equals": "PM2_5"
+					},
+					"valuePath": "averaged_time.value",
+					"unitPath": ""
+				},
+				"NO2": {
+					"arrayPath": "measurement.components",
+					"where": {
+						"path": "type",
+						"equals": "NO2"
+					},
+					"valuePath": "averaged_time.value",
+					"unitPath": ""
+				},
+				"SO2": {
+					"arrayPath": "measurement.components",
+					"where": {
+						"path": "type",
+						"equals": "SO2"
+					},
+					"valuePath": "averaged_time.value",
+					"unitPath": ""
+				},
+				"O3": {
+					"arrayPath": "measurement.components",
+					"where": {
+						"path": "type",
+						"equals": "O3"
+					},
+					"valuePath": "averaged_time.value",
+					"unitPath": ""
+				}
+			}
+		},
+		"category": "Počasí",
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet výsledků",
+					"value": {
+						"mathOperation": "count"
+					},
+					"text": "Celkový počet senzorů."
+				},
+				{
+					"title": "Průměrná hodnota PM10",
+					"value": {
+						"mathOperation": "average",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "PM10"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Průměrná hodnota PM10."
+				},
+				{
+					"title": "Průměrná hodnota PM2.5",
+					"value": {
+						"mathOperation": "average",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "PM2_5"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Průměrná hodnota PM2.5."
+				},
+				{
+					"title": "Průměrná hodnota NO2",
+					"value": {
+						"mathOperation": "average",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "NO2"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Průměrná hodnota NO2."
+				},
+				{
+					"title": "Průměrná hodnota O3",
+					"value": {
+						"mathOperation": "average",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "O3"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Průměrná hodnota O3."
+				},
+				{
+					"title": "Průměrná hodnota SO2",
+					"value": {
+						"mathOperation": "average",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "SO2"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Průměrná hodnota SO2."
+				},
+				{
+					"title": "Suma hodnot PM2.5",
+					"value": {
+						"mathOperation": "sum",
+						"attributePath": {
+							"arrayPath": "measurement.components",
+							"where": {
+								"path": "type",
+								"equals": "PM2_5"
+							},
+							"valuePath": "averaged_time.value"
+						}
+					},
+					"text": "Suma hodnot PM2.5."
+				}
+			]
+		}
+	}
+]
