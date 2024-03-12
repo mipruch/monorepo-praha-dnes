@@ -32,6 +32,13 @@ if (description.value?.match("\{\{.*?\}\}")) {
 			return props.graph[p1];
 		}
 	);
+	description.value = description.value.replace(
+		/\~\~(.*?)\~\~/g,
+		(match, p1) => {
+			return "<span class=text-blue>" + p1 + "</span>";
+		}
+	);
+
 	watch(
 		() => props.graph,
 		() => {
@@ -52,9 +59,7 @@ if (description.value?.match("\{\{.*?\}\}")) {
 		<div class="grid grid-cols-[55%_1fr] w-[268px] h-[124px] items-start">
 			<div class="flex flex-col h-full">
 				<p class="font-semibold mb-1">{{ props.title }}</p>
-				<p class="text-sm opacity-50">
-					{{ description }}
-				</p>
+				<p class="text-sm text-grey-600" v-html="description" />
 			</div>
 			<div
 				class="w-full h-full grid items-center justify-center relative"
@@ -70,9 +75,7 @@ if (description.value?.match("\{\{.*?\}\}")) {
 		<div class="grid w-[268px] h-[124px] items-start">
 			<div class="flex flex-col h-full">
 				<p class="font-semibold mb-1">{{ props.title }}</p>
-				<p class="text-sm opacity-50">
-					{{ description }}
-				</p>
+				<p class="text-sm text-grey-600" v-html="description" />
 			</div>
 			<div class="w-full h-full" v-if="props.graph">
 				<component :is="chosenComponent" :graph="props.graph" />

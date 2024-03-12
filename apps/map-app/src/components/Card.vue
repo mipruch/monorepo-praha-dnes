@@ -29,6 +29,11 @@ type ValueDefinition = {
 		| string;
 };
 
+function handleGraph(graph: any): any {
+	graph.value = handleValue(graph.value);
+	return graph;
+}
+
 function handleValue(
 	value: string | number | ValueDefinition
 ): string | number {
@@ -46,18 +51,19 @@ function handleValue(
 	// Provedeme matematickou operaci nad hodnotami
 	const result = performMathOperation(arrayOfValues, value.mathOperation);
 
+	if (typeof result === "string") {
+		return result;
+	}
 	return formatNumber(result, 1);
 }
 
 function extractValuesFromLayerData(value: ValueDefinition): any[] {
 	// Pokud je value.attributePath string, znamená to, že se jedná o přímý přístup k hodnotě
 	if (typeof value.attributePath === "string") {
-		const arr = layerData.res.features.map((feature: any) => {
-			const val = feature.properties[value.attributePath as string];
-			if (val === undefined || val === null) return null;
-			return val;
+		const path = value.attributePath;
+		return layerData.res.features.map((feature: any) => {
+			return resolvePath(feature.properties, path);
 		});
-		return arr;
 	}
 
 	// Pokud je value.attributePath objekt, znamená to, že se jedná o složitější operaci
@@ -67,7 +73,7 @@ function extractValuesFromLayerData(value: ValueDefinition): any[] {
 		where: {path: string; equals: string};
 		valuePath: string;
 	};
-	const pathToAttribute = attributePath.arrayPath?.split(".") || [];
+	const pathToAttribute = attributePath.arrayPath;
 	const arrayOfValues: any[] = [];
 
 	layerData.res.features.forEach((feature: any) => {
@@ -80,7 +86,7 @@ function extractValuesFromLayerData(value: ValueDefinition): any[] {
 			if (matchesCondition(measurement, attributePath.where)) {
 				const foundValue = resolvePath(
 					measurement,
-					attributePath.valuePath.split(".")
+					attributePath.valuePath
 				);
 				arrayOfValues.push(foundValue);
 			}
@@ -91,35 +97,48 @@ function extractValuesFromLayerData(value: ValueDefinition): any[] {
 
 function performMathOperation(
 	values: any[],
-	operation: "sum" | "average"
-): number {
+	operation: "sum" | "average" | "mostCommon"
+): number | string {
 	const sum = values.reduce((a: any, b: any) => a + b, 0);
 
 	if (operation === "average") {
-		return values.length ? sum / values.length : 0;
+		return (values.length ? sum / values.length : 0) as number;
 	}
 
-	return sum;
+	if (operation === "mostCommon") {
+		const counts: any = {};
+		values.forEach((value) => {
+			counts[value] = (counts[value] || 0) + 1;
+		});
+		const mostCommon = Object.keys(counts).reduce((a, b) =>
+			counts[a] > counts[b] ? a : b
+		);
+		return mostCommon;
+	}
+
+	return sum as number;
 }
 
 function matchesCondition(
 	component: any,
 	where: {path: string; equals: string}
 ): boolean {
-	const value = resolvePath(component, where.path.split("."));
+	const value = resolvePath(component, where.path);
 	return value === where.equals;
 }
 
-function resolvePath(object: any, path: string[]): any {
-	return path.reduce((acc: any, curr: string) => acc[curr], object);
+function resolvePath(object: any, path: string): any {
+	const pathArr = path.split(".") || [];
+	return pathArr.reduce((acc: any, curr: string) => acc[curr], object);
 }
 
 function formatNumber(number: number, decimals: number): string {
-	// Pokud je číslo celé, vrátíme ho v nezměněné podobě
-	if (number % 1 === 0) {
-		return number.toString();
-	}
-	return number.toFixed(decimals);
+	// Then, format the number with space as a thousands separator
+	return new Intl.NumberFormat("cs-CZ", {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 1,
+		// Use ' ' (space) as the thousands separator. Adjust the locale and options as needed.
+	}).format(number);
 }
 </script>
 
@@ -170,8 +189,8 @@ function formatNumber(number: number, decimals: number): string {
 				<WidgetMedium
 					v-for="widget in layerData.pref.widgets?.medium"
 					:title="widget.title"
-					:graph="widget.graph"
 					:description="widget.description"
+					:graph="handleGraph(widget.graph)"
 				/>
 			</div>
 			<div

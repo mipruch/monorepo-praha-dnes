@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import {calculatePercentage} from "@/lib/utils";
-import {computed} from "vue";
+import {calculatePercentage, getColorSchema} from "@/lib/utils";
+import {computed, watch, ref} from "vue";
+
 const props = defineProps<{
 	graph: {
-		value: number;
+		value: string;
 		minValue?: number;
 		maxValue?: number;
 		strokeColor?: string;
@@ -11,13 +12,14 @@ const props = defineProps<{
 	};
 }>();
 
-if (props.graph.strokeColor == undefined) {
-	props.graph.strokeColor = "#0066FF";
-}
+let {lightColor, darkColor} = getColorSchema(
+	props.graph.strokeColor,
+	props.graph.value
+);
 
 const percentage = computed(() => {
 	return calculatePercentage(
-		props.graph.value,
+		Number.parseFloat(props.graph.value),
 		props.graph.minValue,
 		props.graph.maxValue
 	);
@@ -49,7 +51,7 @@ const options = {
 			},
 			track: {
 				show: true,
-				background: "#B4D2FF",
+				background: lightColor,
 			},
 			dataLabels: {
 				name: {
@@ -63,12 +65,15 @@ const options = {
 					offsetY: 11,
 					formatter: function (val: any) {
 						if (
-							props.graph.minValue &&
-							props.graph.maxValue &&
+							props.graph.minValue !== undefined &&
+							props.graph.minValue !== null &&
+							props.graph.maxValue !== undefined &&
+							props.graph.maxValue !== null &&
 							props.graph.unit
-						)
+						) {
 							return props.graph.value + " " + props.graph.unit;
-						return props.graph.value + " %";
+						}
+						return props.graph.value;
 					},
 				},
 			},
@@ -76,7 +81,7 @@ const options = {
 	},
 	fill: {
 		type: ["solid"],
-		colors: ["#0066FF"],
+		colors: [darkColor],
 	},
 	stroke: {
 		lineCap: "round",
