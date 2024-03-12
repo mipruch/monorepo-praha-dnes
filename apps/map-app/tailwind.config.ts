@@ -17,7 +17,7 @@ module.exports = {
 			"4sm": "0.5996rem", // extra extra extra small
 			"3sm": "0.6815rem", // extra extra small
 			"2sm": "0.7744rem", // extra small
-			sm: "0.88rem", // small
+			sm: ["0.8rem", "150%"], // small
 			base: "1rem", // p
 			lg: "1.2rem", // h6
 			xl: "1.44rem", // h5
@@ -51,10 +51,16 @@ module.exports = {
 				light: "#B4D2FF",
 			},
 			grey: {
+				50: "#F2F2F2",
 				100: "#EEEEEE",
 				200: "#E3E3E3", // Šedá tiles
 				300: "#D3D3D3",
+				400: "#B3B3B3",
+				500: "#9E9E9E",
+				600: "#757575",
+				700: "#282828",
 				800: "#202020",
+				900: "#1A1A1A",
 			},
 			background: "hsl(var(--background))",
 			foreground: "hsl(var(--foreground))",

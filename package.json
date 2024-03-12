@@ -24,8 +24,11 @@
   ],
   "dependencies": {
     "@types/geojson": "^7946.0.14",
+    "apexcharts": "^3.46.0",
+    "dayjs": "^1.11.10",
     "leaflet": "^1.9.4",
     "Leaflet.Deflate": "^2.1.0",
-    "leaflet.markercluster": "^1.5.3"
+    "leaflet.markercluster": "^1.5.3",
+    "vue-apexcharts": "^1.6.2"
   }
 }

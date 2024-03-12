@@ -2,6 +2,9 @@
 import Tag from "./Tag.vue";
 import type {Layer, ComponentFilter} from "@/types";
 import Tags from "./Tags.vue";
+import dayjs from "dayjs";
+
+dayjs.locale("cs");
 
 const {properties, pref} = defineProps<{
 	properties: any;
@@ -24,9 +27,12 @@ function handleMapper(path: string) {
 	}
 
 	if (Array.isArray(result)) {
-		return result.join(", ");
+		return result.join("\n");
 	}
 
+	if (checkISOFormat(result)) {
+		return dayjs(result).format("D. M. YYYY HH:mm");
+	}
 	return result;
 }
 
@@ -34,7 +40,7 @@ function handleTableValue(tableValue: string | ComponentFilter) {
 	if (typeof tableValue === "string") {
 		return handleMapper(tableValue);
 	}
-	// return tableValue;
+
 	if (typeof tableValue === "object") {
 		const arrayPath = tableValue.arrayPath.split(".");
 		const array = arrayPath.reduce((acc, curr) => acc[curr], properties);
@@ -44,9 +50,8 @@ function handleTableValue(tableValue: string | ComponentFilter) {
 			const value = tableValuePath.reduce((acc, curr) => acc[curr], obj);
 			return value == tableValue.where.equals;
 		});
-		if (!foundObj) return "N/A";
-		// return foundObj;
 
+		if (!foundObj) return "N/A";
 		const valuePath = tableValue.valuePath.split(".");
 		const value = valuePath.reduce((acc, curr) => acc[curr], foundObj);
 
@@ -59,6 +64,16 @@ function handleTableValue(tableValue: string | ComponentFilter) {
 		return value;
 	}
 	return tableValue;
+}
+
+function checkISOFormat(input: string) {
+	const parsedDate = dayjs(input);
+	if (!parsedDate.isValid()) {
+		return false; // The date is not valid
+	}
+
+	// Compare the input with its ISO string representation
+	return input === parsedDate.toISOString();
 }
 </script>
 <template>
@@ -80,11 +95,11 @@ function handleTableValue(tableValue: string | ComponentFilter) {
 		<p v-if="pref.popupMapper?.paragraph">
 			{{ properties[pref.popupMapper.paragraph] }}
 		</p>
-		<table v-if="pref.popupMapper.table">
+		<table v-if="pref.popupMapper.table" class="mb-4">
 			<template v-for="(value, key) in pref.popupMapper.table">
 				<tr v-if="handleTableValue(value) != 'N/A'">
 					<td>{{ key }}:</td>
-					<td>
+					<td class="whitespace-pre-wrap">
 						{{ handleTableValue(value) }}
 					</td>
 				</tr>

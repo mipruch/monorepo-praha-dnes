@@ -21,7 +21,8 @@
 		"tailwind-merge": "^2.2.1",
 		"tailwindcss-animate": "^1.0.7",
 		"ui": "*",
-		"vue": "^3.4.15"
+		"vue": "^3.4.15",
+		"vue3-apexcharts": "^1.4.4"
 	},
 	"devDependencies": {
 		"@rushstack/eslint-patch": "^1.7.2",
