@@ -24,16 +24,56 @@
 		"widgets": {
 			"small": [
 				{
-					"title": "Aktuální průměrná cena parkování",
-					"value": "32,7",
-					"text": "korun za hodinu."
+					"title": "Počet úřadů",
+					"value": {
+						"mathOperation": "countFeatures"
+					},
+					"text": "Celkový počet úřadů městské správy."
 				},
 				{
-					"title": "Počet otevřených parkovišť",
-					"value": "106",
-					"text": "z celkového počtu 120 parkovišť."
+					"title": "Počet městských částí",
+					"value": {
+						"mathOperation": "countUnique",
+						"attributePath": "district"
+					},
+					"text": "Celkový počet městských částí."
+				},
+				{
+					"title": "Počet dnes otevřených úřadů",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"equals": "OPEN_TODAY"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "Počet dnes otevřených úřadů."
+				},
+				{
+					"title": "Počet právě otevřených úřadů",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"pathDay": "day_of_week",
+								"pathTimeOpens": "opens",
+								"pathTimeCloses": "closes",
+								"equals": "OPEN_NOW"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "Počet právě otevřených úřadů."
 				}
-			],
+			]
+		},
+		"trashWidgets": {
 			"medium": [
 				{
 					"title": "PM2.5",
@@ -153,7 +193,7 @@
 				{
 					"title": "Počet výsledků",
 					"value": {
-						"mathOperation": "count"
+						"mathOperation": "countFeatures"
 					},
 					"text": "Celkový počet záznamů."
 				},
@@ -180,7 +220,7 @@
 	{
 		"id": "kvalita-ovzdusi",
 		"name": "Kvalita ovzduší",
-		"paragraph": "Mikroklima. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
+		"paragraph": "Mikroklima. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate. Widgety obsahující průměrné hodnoty, jsou zprůměrované aktuální hodnoty všech senzorů a nejedná se tak o dlouhodobý průměr. Jejich účelem je poskytnout uživateli aktuální informaci o stavu mikroklimatu. Smogové události se vyhlašují na základě dlohodobých průměrů. Zdroj dat: Golemio, ČHMÚ.",
 		"color": "#FFCE1F",
 		"fetchUrl": "https://api.golemio.cz/v2/airqualitystations/",
 		"iconUrl": "climate.svg",
@@ -244,99 +284,160 @@
 				{
 					"title": "Počet výsledků",
 					"value": {
-						"mathOperation": "count"
+						"mathOperation": "countFeatures"
 					},
 					"text": "Celkový počet senzorů."
 				},
 				{
-					"title": "Průměrná hodnota PM10",
+					"title": "Index kvality ovzduší",
 					"value": {
-						"mathOperation": "average",
-						"attributePath": {
-							"arrayPath": "measurement.components",
-							"where": {
-								"path": "type",
-								"equals": "PM10"
-							},
-							"valuePath": "averaged_time.value"
-						}
+						"mathOperation": "mostCommon",
+						"attributePath": "measurement.AQ_hourly_index"
 					},
-					"text": "Průměrná hodnota PM10."
+					"text": "Nejčastěji vyskytovaný index kvality ovzduší."
+				}
+			],
+			"medium": [
+				{
+					"title": "Průměrná hodnota PM10",
+					"description": "Průměrná hodnota PM10 je ~~{{value}} µg/m3~~.",
+					"graph": {
+						"type": "Bar",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "PM10"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"minValue": 0,
+						"maxValue": 75,
+						"strokeColor": "gradient",
+						"unit": "µg/m3"
+					}
 				},
 				{
 					"title": "Průměrná hodnota PM2.5",
-					"value": {
-						"mathOperation": "average",
-						"attributePath": {
-							"arrayPath": "measurement.components",
-							"where": {
-								"path": "type",
-								"equals": "PM2_5"
-							},
-							"valuePath": "averaged_time.value"
+					"description": "Průměrná hodnota PM2.5 je ~~{{value}} µg/m3~~.",
+					"graph": {
+						"type": "Tachometer",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "PM2_5"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"minValue": 0,
+						"maxValue": 50,
+						"strokeColor": {
+							"0": "green",
+							"10": "yellow",
+							"25": "red"
 						}
-					},
-					"text": "Průměrná hodnota PM2.5."
+					}
 				},
 				{
 					"title": "Průměrná hodnota NO2",
-					"value": {
-						"mathOperation": "average",
-						"attributePath": {
-							"arrayPath": "measurement.components",
-							"where": {
-								"path": "type",
-								"equals": "NO2"
-							},
-							"valuePath": "averaged_time.value"
+					"description": "Průměrná hodnota NO2 je ~~{{value}} µg/m3~~.",
+					"graph": {
+						"type": "Tachometer",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "NO2"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"minValue": 0,
+						"maxValue": 250,
+						"strokeColor": {
+							"0": "green",
+							"40": "yellow",
+							"200": "red"
 						}
-					},
-					"text": "Průměrná hodnota NO2."
+					}
 				},
 				{
 					"title": "Průměrná hodnota O3",
-					"value": {
-						"mathOperation": "average",
-						"attributePath": {
-							"arrayPath": "measurement.components",
-							"where": {
-								"path": "type",
-								"equals": "O3"
-							},
-							"valuePath": "averaged_time.value"
+					"description": "Průměrná hodnota O3 je ~~{{value}} µg/m3~~.",
+					"graph": {
+						"type": "Tachometer",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "O3"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"minValue": 0,
+						"maxValue": 150,
+						"strokeColor": {
+							"0": "green",
+							"50": "yellow",
+							"100": "red"
 						}
-					},
-					"text": "Průměrná hodnota O3."
+					}
 				},
 				{
 					"title": "Průměrná hodnota SO2",
-					"value": {
-						"mathOperation": "average",
-						"attributePath": {
-							"arrayPath": "measurement.components",
-							"where": {
-								"path": "type",
-								"equals": "SO2"
-							},
-							"valuePath": "averaged_time.value"
+					"description": "Průměrná hodnota SO2 je ~~{{value}} µg/m3~~.",
+					"graph": {
+						"type": "Tachometer",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "SO2"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"minValue": 0,
+						"maxValue": 75,
+						"strokeColor": {
+							"0": "green",
+							"20": "yellow",
+							"50": "red"
 						}
-					},
-					"text": "Průměrná hodnota SO2."
+					}
 				},
 				{
-					"title": "Suma hodnot PM2.5",
-					"value": {
-						"mathOperation": "sum",
-						"attributePath": {
-							"arrayPath": "measurement.components",
-							"where": {
-								"path": "type",
-								"equals": "PM2_5"
-							},
-							"valuePath": "averaged_time.value"
-						}
-					},
-					"text": "Suma hodnot PM2.5."
+					"title": "Vytíženost parkovišť",
+					"description": "Vytíženost všech parkovišť dohromady je ~~{{value}} %~~.",
+					"graph": {
+						"type": "Ring",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "PM10"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"strokeColor": "blue"
+					}
 				}
 			]
 		}
