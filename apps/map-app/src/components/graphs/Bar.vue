@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import {computed, ref, type Ref} from "vue";
+import {getColorSchema} from "@/lib/utils";
 
 const props = defineProps<{
 	graph: {
-		value: number;
+		value: string;
 		minValue?: number;
 		maxValue?: number;
 		strokeColor?: string;
+		unit?: string;
 	};
 }>();
 
-if (props.graph.strokeColor == undefined) {
-	props.graph.strokeColor = "#0066FF";
-}
+let {darkColor} = getColorSchema(props.graph.strokeColor, props.graph.value);
 
 function calculateLeft(
 	currentValue: number,
@@ -50,7 +50,7 @@ function calculateLeft(
 // Použití funkce
 const left = computed(() => {
 	return calculateLeft(
-		props.graph.value,
+		Number.parseFloat(props.graph.value),
 		props.graph.minValue,
 		props.graph.maxValue
 	);
@@ -60,8 +60,14 @@ const left = computed(() => {
 <template>
 	<div
 		class="line h-[9px] w-full rounded-[5px] relative"
-		:style="`background:${props.graph.strokeColor}`"
+		:style="`background:${darkColor}`"
 	>
+		<p class="text-sm absolute opacity-50 top-4">
+			{{ props.graph.minValue }} {{ props.graph.unit }}
+		</p>
+		<p class="text-sm absolute opacity-50 top-4 right-0 text-right">
+			{{ props.graph.maxValue }} {{ props.graph.unit }}
+		</p>
 		<div
 			class="dot h-[15px] w-[15px] bg-white rounded-full absolute top-[-3px] transition-all shadow-[0px_0px_10px_rgba(0,0,0,0.25)]"
 			:style="{left}"

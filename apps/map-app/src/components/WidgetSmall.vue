@@ -24,6 +24,10 @@ function replaceText() {
 	text.value = props.text.replace(/\{\{(.*?)\}\}/g, (match, p1) => {
 		return "" + props.value;
 	});
+
+	text.value = text.value.replace(/\~\~(.*?)\~\~/g, (match, p1) => {
+		return "<span class=text-blue>" + p1 + "</span>";
+	});
 }
 </script>
 <template>
@@ -32,9 +36,7 @@ function replaceText() {
 			<div class="flex flex-col h-full">
 				<p class="font-semibold mb-auto">{{ props.title }}</p>
 				<p class="text-3xl font-semibold mb-3">{{ props.value }}</p>
-				<p class="text-sm opacity-50">
-					{{ text }}
-				</p>
+				<p class="text-sm text-grey-600" v-html="text" />
 			</div>
 		</div>
 	</WidgetBase>
