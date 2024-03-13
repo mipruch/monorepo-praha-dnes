@@ -24,16 +24,56 @@
 		"widgets": {
 			"small": [
 				{
-					"title": "Aktuální průměrná cena parkování",
-					"value": "32,7",
-					"text": "korun za hodinu."
+					"title": "Počet úřadů",
+					"value": {
+						"mathOperation": "countFeatures"
+					},
+					"text": "Celkový počet úřadů městské správy."
 				},
 				{
-					"title": "Počet otevřených parkovišť",
-					"value": "106",
-					"text": "z celkového počtu 120 parkovišť."
+					"title": "Počet městských částí",
+					"value": {
+						"mathOperation": "countUnique",
+						"attributePath": "district"
+					},
+					"text": "Celkový počet městských částí."
+				},
+				{
+					"title": "Počet dnes otevřených úřadů",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"equals": "OPEN_TODAY"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "Počet dnes otevřených úřadů."
+				},
+				{
+					"title": "Počet právě otevřených úřadů",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"pathDay": "day_of_week",
+								"pathTimeOpens": "opens",
+								"pathTimeCloses": "closes",
+								"equals": "OPEN_NOW"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "Počet právě otevřených úřadů."
 				}
-			],
+			]
+		},
+		"trashWidgets": {
 			"medium": [
 				{
 					"title": "PM2.5",
@@ -153,7 +193,7 @@
 				{
 					"title": "Počet výsledků",
 					"value": {
-						"mathOperation": "count"
+						"mathOperation": "countFeatures"
 					},
 					"text": "Celkový počet záznamů."
 				},
@@ -244,7 +284,7 @@
 				{
 					"title": "Počet výsledků",
 					"value": {
-						"mathOperation": "count"
+						"mathOperation": "countFeatures"
 					},
 					"text": "Celkový počet senzorů."
 				},
