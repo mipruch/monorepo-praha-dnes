@@ -213,6 +213,65 @@
 					},
 					"text": "Celkový počet míst."
 				}
+			],
+			"medium": [
+				{
+					"title": "Průměrný počet parkovacích míst",
+					"description": "Průměrný počet parkovacích míst na parkovišti je ~~{{value}}~~.",
+					"graph": {
+						"type": "Ring",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": "total_spot_number"
+						},
+						"strokeColor": "blue"
+					}
+				},
+				{
+					"title": "Aktuální dostupnost parkovacích míst",
+					"description": "Monitorovaná parkoviště jsou z ~~{{value}} %~~ neobsazená.",
+					"graph": {
+						"type": "Ring",
+						"value": {
+							"mathOperation": "proportion",
+							"value1": {
+								"mathOperation": "sum",
+								"attributePath": {
+									"arrayPath": "",
+									"where": {
+										"path": "total_spot_number",
+										"equals": "NOTNULL"
+									},
+									"valuePath": "available_spots_number"
+								}
+							},
+							"value2": {
+								"mathOperation": "sum",
+								"attributePath": {
+									"arrayPath": "",
+									"where": {
+										"path": "available_spots_number",
+										"equals": "NOTNULL"
+									},
+									"valuePath": "total_spot_number"
+								}
+							}
+						},
+						"strokeColor": "blue"
+					}
+				}
+			],
+			"large": [
+				{
+					"title": "Nejméně vytížená parkoviště",
+					"graph": {
+						"type": "List",
+						"paragraph": "Seznam parkovišt s největším počtem volných míst:",
+						"sortBy": "available_spots_number",
+						"sortMethod": "desc",
+						"textPath": "name"
+					}
+				}
 			]
 		}
 	},
@@ -418,25 +477,6 @@
 							"20": "yellow",
 							"50": "red"
 						}
-					}
-				},
-				{
-					"title": "Vytíženost parkovišť",
-					"description": "Vytíženost všech parkovišť dohromady je ~~{{value}} %~~.",
-					"graph": {
-						"type": "Ring",
-						"value": {
-							"mathOperation": "average",
-							"attributePath": {
-								"arrayPath": "measurement.components",
-								"where": {
-									"path": "type",
-									"equals": "PM10"
-								},
-								"valuePath": "averaged_time.value"
-							}
-						},
-						"strokeColor": "blue"
 					}
 				}
 			]

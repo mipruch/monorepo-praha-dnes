@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import {calculatePercentage, getColorSchema} from "@/lib/utils";
+import {calculatePercentage, getColorSchema, formatNumber} from "@/lib/utils";
 
 const props = defineProps<{
 	graph: {
@@ -8,6 +8,7 @@ const props = defineProps<{
 		minValue?: number;
 		maxValue?: number;
 		strokeColor?: string;
+		unit?: string;
 	};
 }>();
 
@@ -70,7 +71,11 @@ const options = {
 					offsetY: 11,
 					show: true,
 					formatter: function (val: any) {
-						return props.graph.value + " %";
+						const value = formatNumber(val, 1);
+						if (props.graph.unit) {
+							return value + " " + props.graph.unit;
+						}
+						return value;
 					},
 				},
 			},

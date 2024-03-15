@@ -16,7 +16,9 @@ defineEmits(["removeLayer"]);
 const {layerData} = defineProps<{
 	layerData: {
 		pref: any;
-		res: any;
+		res: {
+			features: any[];
+		};
 	};
 }>();
 
@@ -26,6 +28,7 @@ type ValueDefinition = {
 		| "average"
 		| "countFeatures"
 		| "mostCommon"
+		| "proportion"
 		| "countUnique";
 	attributePath:
 		| {
@@ -42,13 +45,23 @@ type ValueDefinition = {
 		| string;
 };
 
+type ProportionDefinition = {
+	mathOperation: "proportion";
+	value1: string | number | ValueDefinition;
+	value2: string | number | ValueDefinition;
+};
+
 function handleGraph(graph: any): any {
+	if (graph.type === "List") {
+		graph.items = handleList(graph);
+		return graph;
+	}
 	graph.value = handleValue(graph.value);
 	return graph;
 }
 
 function handleValue(
-	value: string | number | ValueDefinition
+	value: string | number | ValueDefinition | ProportionDefinition
 ): string | number {
 	// Pokud je value string nebo number, vrátíme ho bez žádných dalších operací
 	if (typeof value === "string" || typeof value === "number") {
@@ -60,6 +73,16 @@ function handleValue(
 		return layerData.res.features.length;
 	}
 
+	if (value.mathOperation === "proportion") {
+		const number1 = handleValue((value as ProportionDefinition).value1);
+		const number2 = handleValue((value as ProportionDefinition).value2);
+
+		if (typeof number1 === "string" || typeof number2 === "string") {
+			return "N/A";
+		}
+		return (number1 / number2) * 100;
+	}
+
 	// Na základě konfigurčního souboru získáme toužené hodnoty z nafetchovaných dat (z geojson features)
 	const arrayOfValues = extractValuesFromLayerData(value);
 
@@ -69,7 +92,42 @@ function handleValue(
 	if (typeof result === "string") {
 		return result;
 	}
-	return formatNumber(result, 1);
+	return result;
+}
+
+function handleList(graph: any): any {
+	const sortMethod = graph.sortMethod;
+
+	// Odfiltrovat features, které nemají požadovanou hodnotu
+	const features = layerData.res.features.filter((feature: any) => {
+		if (
+			resolvePath(feature.properties, graph.sortBy) !== undefined &&
+			resolvePath(feature.properties, graph.sortBy) !== null
+		) {
+			return true;
+		}
+	});
+
+	// Seřadit features podle požadované hodnoty sortBy a sortMethod
+	const sorted = features.sort((a: any, b: any) => {
+		const valueA = resolvePath(a.properties, graph.sortBy);
+		const valueB = resolvePath(b.properties, graph.sortBy);
+		if (sortMethod === "asc") {
+			return valueA - valueB;
+		} else if (sortMethod === "desc") {
+			return valueB - valueA;
+		}
+		return 0;
+	});
+
+	// Vytvořit pole stringů, které budou zobrazeny v listu
+	const items = sorted.map(
+		(feature: any) =>
+			resolvePath(feature.properties, graph.textPath) +
+			", " +
+			resolvePath(feature.properties, graph.sortBy)
+	);
+	return items;
 }
 
 function extractValuesFromLayerData(value: ValueDefinition): any[] {
@@ -92,10 +150,14 @@ function extractValuesFromLayerData(value: ValueDefinition): any[] {
 	const arrayOfValues: any[] = [];
 
 	layerData.res.features.forEach((feature: any) => {
-		const arrayOfMeasurements = resolvePath(
+		let arrayOfMeasurements = resolvePath(
 			feature.properties,
 			attributePath.arrayPath
 		);
+
+		if (!Array.isArray(arrayOfMeasurements)) {
+			arrayOfMeasurements = [arrayOfMeasurements];
+		}
 
 		arrayOfMeasurements.find((measurement: any) => {
 			if (matchesCondition(measurement, attributePath.where)) {
@@ -114,7 +176,13 @@ function extractValuesFromLayerData(value: ValueDefinition): any[] {
 
 function performMathOperation(
 	values: any[],
-	operation: "sum" | "count" | "average" | "mostCommon" | "countUnique"
+	operation:
+		| "sum"
+		| "count"
+		| "average"
+		| "mostCommon"
+		| "countUnique"
+		| "proportion"
 ): number | string {
 	if (operation === "count") {
 		return values.length;
@@ -156,12 +224,12 @@ function matchesCondition(
 ): boolean {
 	const value = resolvePath(component, where.path);
 
-	// Kontrole, zda dnes otevřeno
+	// Kontrola, zda je dnes otevřeno
 	if (where.equals === "OPEN_TODAY" && value === dayjs().format("dddd")) {
 		return true;
 	}
 
-	// Kontrole, zda nyní otevřeno
+	// Kontrola, zda je nyní otevřeno
 	if (
 		where.equals === "OPEN_NOW" &&
 		where.pathDay &&
@@ -184,6 +252,10 @@ function matchesCondition(
 		return now.isBetween(opensTime, closesTime);
 	}
 
+	if (where.equals === "NOTNULL") {
+		return value !== null && value !== undefined;
+	}
+
 	// where.equals nemá speciální (dynamickou / časovou) hodnotu, takže se porovnává přímo.
 	return value === where.equals;
 }
@@ -194,7 +266,7 @@ function resolvePath(object: any, path: string): any {
 	return pathArr.reduce((acc: any, curr: string) => acc[curr], object);
 }
 
-function formatNumber(number: number, decimals: number): string {
+function formatNumber(number: number, decimals: number): string | number {
 	return new Intl.NumberFormat("cs-CZ", {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 1,
@@ -260,7 +332,7 @@ function formatNumber(number: number, decimals: number): string {
 				<WidgetLarge
 					v-for="widget in layerData.pref.widgets?.large"
 					:title="widget.title"
-					:graph="widget.graph"
+					:graph="handleGraph(widget.graph)"
 				/>
 			</div>
 		</div>

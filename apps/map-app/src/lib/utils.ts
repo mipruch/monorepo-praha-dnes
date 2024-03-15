@@ -86,3 +86,14 @@ export function getColorSchema(
 
 	return COLORS.blue;
 }
+
+export function formatNumber(
+	number: number | string | undefined | null,
+	decimals: number
+): string {
+	number = parseFloat(number as string);
+	return new Intl.NumberFormat("cs-CZ", {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 1,
+	}).format(number);
+}
