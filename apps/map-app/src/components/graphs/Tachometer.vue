@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {calculatePercentage, getColorSchema} from "@/lib/utils";
+import {calculatePercentage, formatNumber, getColorSchema} from "@/lib/utils";
 import {computed, watch, ref} from "vue";
 
 const props = defineProps<{
@@ -64,6 +64,8 @@ const options = {
 					fontWeight: "600",
 					offsetY: 11,
 					formatter: function (val: any) {
+						const value = formatNumber(props.graph.value, 1);
+
 						if (
 							props.graph.minValue !== undefined &&
 							props.graph.minValue !== null &&
@@ -71,9 +73,9 @@ const options = {
 							props.graph.maxValue !== null &&
 							props.graph.unit
 						) {
-							return props.graph.value + " " + props.graph.unit;
+							return value + " " + props.graph.unit;
 						}
-						return props.graph.value;
+						return value;
 					},
 				},
 			},

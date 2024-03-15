@@ -6,6 +6,7 @@ import Tachometer from "./graphs/Tachometer.vue";
 import Bar from "./graphs/Bar.vue";
 import Area from "./graphs/Area.vue";
 import Nearby from "./graphs/Nearby.vue";
+import {formatNumber} from "@/lib/utils";
 
 const props = defineProps<{
 	title: string;
@@ -29,7 +30,7 @@ if (description.value?.match("\{\{.*?\}\}")) {
 	description.value = description.value.replace(
 		/\{\{(.*?)\}\}/g,
 		(match, p1) => {
-			return props.graph[p1];
+			return formatNumber(props.graph[p1], 1);
 		}
 	);
 	description.value = description.value.replace(
@@ -45,7 +46,7 @@ if (description.value?.match("\{\{.*?\}\}")) {
 			description.value = props.description!.replace(
 				/\{\{(.*?)\}\}/g,
 				(match, p1) => {
-					return props.graph[p1];
+					return formatNumber(props.graph[p1], 1);
 				}
 			);
 		}
