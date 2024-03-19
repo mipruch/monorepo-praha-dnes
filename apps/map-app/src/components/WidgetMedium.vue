@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import WidgetBase from "./WidgetBase.vue";
-import Ring from "./graphs/Ring.vue";
-import Tachometer from "./graphs/Tachometer.vue";
-import Bar from "./graphs/Bar.vue";
-import Area from "./graphs/Area.vue";
-import Nearby from "./graphs/Nearby.vue";
+
 import {formatNumber} from "@/lib/utils";
 
 const props = defineProps<{
@@ -14,15 +10,15 @@ const props = defineProps<{
 	graph: any;
 }>();
 
-const componentRegistry = {
-	Ring,
-	Tachometer,
-	Bar,
-	Area,
-	Nearby,
-};
+// const componentRegistry = {
+// 	Ring,
+// 	Tachometer,
+// 	Bar,
+// 	Area,
+// 	Nearby,
+// };
 
-const chosenComponent = eval(props.graph.type);
+const chosenComponent = props.graph.type;
 
 const description = ref(props.description);
 
