@@ -10,14 +10,6 @@ const props = defineProps<{
 	graph: any;
 }>();
 
-// const componentRegistry = {
-// 	Ring,
-// 	Tachometer,
-// 	Bar,
-// 	Area,
-// 	Nearby,
-// };
-
 const chosenComponent = props.graph.type;
 
 const description = ref(props.description);

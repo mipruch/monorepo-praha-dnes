@@ -96,6 +96,10 @@ function checkISOFormat(input: string) {
 			{{ properties[pref.popupMapper.paragraph] }}
 		</p>
 		<table v-if="pref.popupMapper.table" class="mb-4">
+			<colgroup>
+				<col style="width: 30%" />
+				<col style="width: 70%" />
+			</colgroup>
 			<template v-for="(value, key) in pref.popupMapper.table">
 				<tr v-if="handleTableValue(value) != 'N/A'">
 					<td>{{ key }}:</td>
@@ -120,14 +124,15 @@ function checkISOFormat(input: string) {
 	table {
 		width: 100%;
 		border-collapse: collapse;
+		table-layout: fixed;
 		tr {
-			// border-bottom: 1px solid #c7c7c7;
 			td {
 				padding: 0.4rem;
 				&:first-child {
 					font-weight: 600;
 					padding-right: 1rem;
 				}
+				word-wrap: break-word;
 			}
 			&:nth-child(even) {
 				background-color: #d3d3d3;
