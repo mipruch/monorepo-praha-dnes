@@ -184,7 +184,13 @@
 			"table": {
 				"Adresa": "address_formatted",
 				"Celkový počet míst": "total_spot_number",
-				"Aktualizováno": "date_modified"
+				"Počet volných míst": "available_spots_number",
+				"Poslední aktualizace volných míst": "available_spots_last_updated",
+				"Kategorie": "category",
+				"Typ parkoviště": "parking_type",
+				"Aktualizováno": "date_modified",
+				"Poskytovatel": "source",
+				"Datový zdroj": "data_provider"
 			}
 		},
 		"category": "Dopravní informace a mobilita",
@@ -478,6 +484,230 @@
 							"50": "red"
 						}
 					}
+				}
+			]
+		}
+	},
+	{
+		"id": "zahrady",
+		"name": "Zahrady",
+		"category": "Veřejná vybavenost",
+		"color": "#00ED00",
+		"fetchUrl": "https://api.golemio.cz/v2/gardens/",
+		"iconUrl": "climate.svg",
+		"paragraph": "Zahrady. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
+		"popupMapper": {
+			"name": "name",
+			"tags": {
+				"tertiary": "",
+				"warning": ""
+			},
+			"image": "image.url",
+			"paragraph": "description",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Web": "url",
+				"Otevírací doba": {
+					"arrayPath": "properties",
+					"where": {
+						"path": "id",
+						"equals": "doba"
+					},
+					"valuePath": "value"
+				},
+				"Telefon": "telephone",
+				"Aktualizováno": "updated_at"
+			}
+		}
+	},
+	{
+		"id": "medicalinstitutions",
+		"name": "Zdravotnická zařízení",
+		"category": "Veřejná vybavenost",
+		"color": "#E92020",
+		"fetchUrl": "https://api.golemio.cz/v2/medicalinstitutions/",
+		"iconUrl": "climate.svg",
+		"paragraph": "Zdravotnická zařízení",
+		"popupMapper": {
+			"name": "name",
+			"tags": {
+				"tertiary": "type.description",
+				"warning": ""
+			},
+			"image": "",
+			"paragraph": "description",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Městská část": "district",
+				"Web": "url",
+				"Telefon": "telephone",
+				"E-mail": "email",
+				"Aktualizováno": "updated_at"
+			}
+		},
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet právě otevřených zařízení",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"pathDay": "day_of_week",
+								"pathTimeOpens": "opens",
+								"pathTimeCloses": "closes",
+								"equals": "OPEN_NOW"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "Počet právě otevřených zařízení."
+				}
+			]
+		}
+	},
+	{
+		"id": "municipallibraries",
+		"name": "Knihovny",
+		"category": "Veřejná vybavenost",
+		"color": "#57159e",
+		"fetchUrl": "https://api.golemio.cz/v2/municipallibraries/",
+		"iconUrl": "climate.svg",
+		"paragraph": "Knihovny",
+		"popupMapper": {
+			"name": "name",
+			"tags": {
+				"tertiary": "",
+				"warning": ""
+			},
+			"image": "",
+			"paragraph": "description",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Městská část": "district",
+				"Web": "web",
+				"Telefon": "telephone",
+				"E-mail": "email",
+				"Aktualizováno": "updated_at"
+			}
+		},
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet právě otevřených knihoven",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"pathDay": "day_of_week",
+								"pathTimeOpens": "opens",
+								"pathTimeCloses": "closes",
+								"equals": "OPEN_NOW"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "Počet právě otevřených knihoven."
+				}
+			]
+		}
+	},
+	{
+		"id": "municipalpolicestations",
+		"name": "Policejní stanice",
+		"category": "Městské informace",
+		"color": "#1818b8",
+		"fetchUrl": "https://api.golemio.cz/v2/municipalpolicestations/",
+		"iconUrl": "climate.svg",
+		"paragraph": "Policejní stanice",
+		"popupMapper": {
+			"name": "name",
+			"tags": {
+				"tertiary": "",
+				"warning": ""
+			},
+			"image": "",
+			"paragraph": "description",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Katastr": "cadastral_area",
+				"Městská část": "district",
+				"Poznámka": "note",
+				"E-mail": "email",
+				"Aktualizováno": "updated_at"
+			}
+		}
+	},
+	{
+		"id": "playgrounds",
+		"name": "Hřiště",
+		"category": "Veřejná vybavenost",
+		"color": "#E92020",
+		"fetchUrl": "https://api.golemio.cz/v2/playgrounds/",
+		"iconUrl": "climate.svg",
+		"paragraph": "Hřiště",
+		"popupMapper": {
+			"name": "name",
+			"tags": {
+				"tertiary": "",
+				"warning": ""
+			},
+			"image": "image.url",
+			"paragraph": "content",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Městská část": "district",
+				"Web": "url",
+				"Aktualizováno": "updated_at"
+			}
+		}
+	},
+	{
+		"id": "vehiclepositions",
+		"name": "Pozice vozidel",
+		"category": "Veřejná doprava",
+		"color": "#E92020",
+		"fetchUrl": "https://api.golemio.cz/v2/vehiclepositions/",
+		"iconUrl": "climate.svg",
+		"paragraph": "Pozice vozidel",
+		"popupMapper": {
+			"name": "trip.gtfs.route_short_name",
+			"tags": {
+				"tertiary": "",
+				"warning": ""
+			},
+			"table": {
+				"Zpoždění v minutách": "last_position.delay.actual",
+				"Rychlost": "last_position.speed",
+				"Dopravce": "trip.agency_name.real",
+				"Linka": "trip.gtfs.route_short_name",
+				"Registrační číslo vozidla": "trip.vehicle_registration_number",
+				"Typ vozidla": "trip.vehicle_type.description_cs",
+				"Nízkopodlařní": "trip.wheelchair_accessible",
+				"Klimatizace": "trip.air_conditioned",
+				"Poslední aktualizace": "last_position.origin_timestamp"
+			}
+		},
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet vozidel",
+					"value": {
+						"mathOperation": "countFeatures"
+					},
+					"text": "Celkový počet vozidel."
+				},
+				{
+					"title": "Kumulované zpoždění",
+					"value": {
+						"mathOperation": "sum",
+						"attributePath": "last_position.delay.actual"
+					},
+					"text": "Kumulované zpoždění je ~~{{value}}~~ minut."
 				}
 			]
 		}
