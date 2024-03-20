@@ -37,6 +37,26 @@ class PragueMap {
 		},
 	});
 
+	public toggleDarkModeLayers() {
+		if (this.map.hasLayer(this.lightBase)) {
+			this.map.removeLayer(this.lightBase);
+			this.map.addLayer(this.darkBase);
+		} else {
+			this.map.removeLayer(this.darkBase);
+			this.map.addLayer(this.lightBase);
+		}
+	}
+
+	public setLightMode() {
+		this.map.removeLayer(this.darkBase);
+		this.map.addLayer(this.lightBase);
+	}
+
+	public setDarkMode() {
+		this.map.removeLayer(this.lightBase);
+		this.map.addLayer(this.darkBase);
+	}
+
 	public initializeMap(containerId: string) {
 		this.map = L.map("viewDiv", {
 			center: [50.075, 14.46],
@@ -47,26 +67,6 @@ class PragueMap {
 			zoomAnimation: true,
 		});
 		this.cluster.addTo(this.map);
-
-		// LAYERS BUTTON
-		document
-			.getElementById("layersButton")
-			?.addEventListener("click", () => {
-				if (this.map.hasLayer(this.lightBase)) {
-					this.map.removeLayer(this.lightBase);
-					this.map.addLayer(this.darkBase);
-				} else {
-					this.map.removeLayer(this.darkBase);
-					this.map.addLayer(this.lightBase);
-				}
-			});
-		// ZOOM BUTTONS
-		document.getElementById("zoomin")?.addEventListener("click", () => {
-			this.map.flyTo(this.map.getCenter(), this.map.getZoom() + 1);
-		});
-		document.getElementById("zoomout")?.addEventListener("click", () => {
-			this.map.flyTo(this.map.getCenter(), this.map.getZoom() - 1);
-		});
 	}
 
 	public static getInstance(): PragueMap {
@@ -148,10 +148,11 @@ async function makeLayer(pref: any) {
 
 		onEachFeature: (feature, layer) => {
 			if (feature.properties) {
+				const id = Math.random();
 				const popup = L.popup({
 					className: "custom-popup",
 					minWidth: 480,
-					content: `<div id="map-popup-${feature.properties.name}" />`,
+					content: `<div id="map-popup-${id}" />`,
 					pane: "popupPane",
 					closeButton: false,
 				});
@@ -168,9 +169,7 @@ async function makeLayer(pref: any) {
 							} as any,
 							undefined
 						),
-						document.getElementById(
-							`map-popup-${feature.properties.name}`
-						)!
+						document.getElementById(`map-popup-${id}`)!
 					);
 				});
 			}

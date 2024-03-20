@@ -1,10 +1,42 @@
 <script setup lang="ts">
 import {pragueMap} from "../stores/mapStore";
-import {onMounted} from "vue";
+import {onMounted, ref, watch, type Ref} from "vue";
 import {Layers} from "lucide-vue-next";
+
+const layersButton: Ref<HTMLDivElement | null> = ref(null);
+const zoomInButton: Ref<HTMLDivElement | null> = ref(null);
+const zoomOutButton: Ref<HTMLDivElement | null> = ref(null);
+const darkMode = ref(false);
 
 onMounted(() => {
 	pragueMap.initializeMap("viewDiv");
+	darkMode.value = document.documentElement.classList.contains("dark");
+
+	layersButton.value?.addEventListener("click", () => {
+		if (document.documentElement.classList.contains("dark")) {
+			document.documentElement.classList.remove("dark");
+			pragueMap.setLightMode();
+			darkMode.value = false;
+		} else {
+			document.documentElement.classList.add("dark");
+			pragueMap.setDarkMode();
+			darkMode.value = true;
+		}
+	});
+
+	zoomInButton.value?.addEventListener("click", () => {
+		pragueMap.map.flyTo(
+			pragueMap.map.getCenter(),
+			pragueMap.map.getZoom() + 1
+		);
+	});
+
+	zoomOutButton.value?.addEventListener("click", () => {
+		pragueMap.map.flyTo(
+			pragueMap.map.getCenter(),
+			pragueMap.map.getZoom() - 1
+		);
+	});
 });
 </script>
 
@@ -15,21 +47,24 @@ onMounted(() => {
 			class="map-controls z-[9999] absolute bottom-0 flex justify-between w-full p-[--gap] items-end"
 		>
 			<div
+				ref="layersButton"
 				id="layersButton"
 				class="w-[100px] h-[100px] bg-foreground rounded-[var(--gap)] cursor-pointer grid items-center justify-center hover:opacity-75 transition-all duration-100 ease-in-out select-none"
 			>
-				<Layers color="white" :size="36" />
+				<Layers :color="darkMode ? 'black' : 'white'" :size="36" />
 			</div>
 			<div id="zoomGroup" class="grid items-end h-min gap-[7px]">
 				<div
 					class="w-8 h-8 bg-foreground leading-none rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"
 					id="zoomin"
+					ref="zoomInButton"
 				>
 					+
 				</div>
 				<div
 					class="w-8 h-8 leading-none bg-foreground rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"
 					id="zoomout"
+					ref="zoomOutButton"
 				>
 					-
 				</div>
