@@ -590,7 +590,8 @@
 				"Web": "web",
 				"Telefon": "telephone",
 				"E-mail": "email",
-				"Aktualizováno": "updated_at"
+				"Aktualizováno": "updated_at",
+				"Služby": "services.name"
 			}
 		},
 		"widgets": {
@@ -662,7 +663,8 @@
 				"Adresa": "address.address_formatted",
 				"Městská část": "district",
 				"Web": "url",
-				"Aktualizováno": "updated_at"
+				"Aktualizováno": "updated_at",
+				"Properties": "properties.description"
 			}
 		}
 	},
