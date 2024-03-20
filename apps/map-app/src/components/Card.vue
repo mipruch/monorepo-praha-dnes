@@ -113,10 +113,13 @@ function handleList(graph: any): any {
 	const sorted = features.sort((a: any, b: any) => {
 		const valueA = getNestedProperty(a.properties, graph.sortBy);
 		const valueB = getNestedProperty(b.properties, graph.sortBy);
+
+		if (valueA == undefined || valueB == undefined) return 0;
+
 		if (sortMethod === "asc") {
-			return valueA - valueB;
+			return Number(valueA) - Number(valueB);
 		} else if (sortMethod === "desc") {
-			return valueB - valueA;
+			return Number(valueB) - Number(valueA);
 		}
 		return 0;
 	});
@@ -155,6 +158,8 @@ function extractValuesFromLayerData(value: ValueDefinition): any[] {
 			feature.properties,
 			attributePath.arrayPath
 		);
+
+		if (!arrayOfMeasurements) return undefined;
 
 		if (!Array.isArray(arrayOfMeasurements)) {
 			arrayOfMeasurements = [arrayOfMeasurements];
