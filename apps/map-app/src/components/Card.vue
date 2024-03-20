@@ -9,6 +9,7 @@ import WidgetLarge from "./WidgetLarge.vue";
 
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+import {getNestedProperty} from "@/stores/mapperUtilities";
 dayjs.locale("cs");
 dayjs.extend(isBetween);
 
@@ -101,8 +102,8 @@ function handleList(graph: any): any {
 	// Odfiltrovat features, které nemají požadovanou hodnotu
 	const features = layerData.res.features.filter((feature: any) => {
 		if (
-			resolvePath(feature.properties, graph.sortBy) !== undefined &&
-			resolvePath(feature.properties, graph.sortBy) !== null
+			getNestedProperty(feature.properties, graph.sortBy) !== undefined &&
+			getNestedProperty(feature.properties, graph.sortBy) !== null
 		) {
 			return true;
 		}
@@ -110,8 +111,8 @@ function handleList(graph: any): any {
 
 	// Seřadit features podle požadované hodnoty sortBy a sortMethod
 	const sorted = features.sort((a: any, b: any) => {
-		const valueA = resolvePath(a.properties, graph.sortBy);
-		const valueB = resolvePath(b.properties, graph.sortBy);
+		const valueA = getNestedProperty(a.properties, graph.sortBy);
+		const valueB = getNestedProperty(b.properties, graph.sortBy);
 		if (sortMethod === "asc") {
 			return valueA - valueB;
 		} else if (sortMethod === "desc") {
@@ -123,9 +124,9 @@ function handleList(graph: any): any {
 	// Vytvořit pole stringů, které budou zobrazeny v listu
 	const items = sorted.map(
 		(feature: any) =>
-			resolvePath(feature.properties, graph.textPath) +
+			getNestedProperty(feature.properties, graph.textPath) +
 			", " +
-			resolvePath(feature.properties, graph.sortBy)
+			getNestedProperty(feature.properties, graph.sortBy)
 	);
 	return items;
 }
@@ -135,7 +136,7 @@ function extractValuesFromLayerData(value: ValueDefinition): any[] {
 	if (typeof value.attributePath === "string") {
 		const path = value.attributePath;
 		return layerData.res.features.map((feature: any) => {
-			return resolvePath(feature.properties, path);
+			return getNestedProperty(feature.properties, path);
 		});
 	}
 
@@ -150,7 +151,7 @@ function extractValuesFromLayerData(value: ValueDefinition): any[] {
 	const arrayOfValues: any[] = [];
 
 	layerData.res.features.forEach((feature: any) => {
-		let arrayOfMeasurements = resolvePath(
+		let arrayOfMeasurements = getNestedProperty(
 			feature.properties,
 			attributePath.arrayPath
 		);
@@ -161,7 +162,7 @@ function extractValuesFromLayerData(value: ValueDefinition): any[] {
 
 		arrayOfMeasurements.find((measurement: any) => {
 			if (matchesCondition(measurement, attributePath.where)) {
-				const foundValue = resolvePath(
+				const foundValue = getNestedProperty(
 					measurement,
 					attributePath.valuePath
 				);
@@ -222,7 +223,7 @@ function matchesCondition(
 		pathTimeCloses?: string;
 	}
 ): boolean {
-	const value = resolvePath(component, where.path);
+	const value = getNestedProperty(component, where.path);
 
 	// Kontrola, zda je dnes otevřeno
 	if (where.equals === "OPEN_TODAY" && value === dayjs().format("dddd")) {
@@ -236,15 +237,15 @@ function matchesCondition(
 		where.pathTimeOpens &&
 		where.pathTimeCloses
 	) {
-		const day = resolvePath(component, where.pathDay);
+		const day = getNestedProperty(component, where.pathDay);
 		const now = dayjs();
 
 		if (day !== now.format("dddd")) {
 			return false;
 		}
 
-		const opens = resolvePath(component, where.pathTimeOpens);
-		const closes = resolvePath(component, where.pathTimeCloses);
+		const opens = getNestedProperty(component, where.pathTimeOpens);
+		const closes = getNestedProperty(component, where.pathTimeCloses);
 
 		const opensTime = dayjs(now.format("YYYY.MM.DD") + " " + opens);
 		const closesTime = dayjs(now.format("YYYY.MM.DD") + " " + closes);
@@ -258,12 +259,6 @@ function matchesCondition(
 
 	// where.equals nemá speciální (dynamickou / časovou) hodnotu, takže se porovnává přímo.
 	return value === where.equals;
-}
-
-function resolvePath(object: any, path: string): any {
-	if (!path) return object;
-	const pathArr = path.split(".") || [];
-	return pathArr.reduce((acc: any, curr: string) => acc[curr], object);
 }
 
 function formatNumber(number: number, decimals: number): string | number {
