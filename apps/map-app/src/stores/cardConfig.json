@@ -21,6 +21,9 @@
 			}
 		},
 		"category": "Městské informace",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
 		"widgets": {
 			"small": [
 				{
@@ -175,6 +178,9 @@
 		"color": "#0066FF",
 		"fetchUrl": "https://api.golemio.cz/v2/parking/",
 		"iconUrl": "parking.svg",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
 		"popupMapper": {
 			"name": "name",
 			"tags": {
@@ -289,6 +295,9 @@
 		"color": "#FFCE1F",
 		"fetchUrl": "https://api.golemio.cz/v2/airqualitystations/",
 		"iconUrl": "climate.svg",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
 		"popupMapper": {
 			"name": "name",
 			"table": {
@@ -492,9 +501,9 @@
 		"id": "zahrady",
 		"name": "Zahrady",
 		"category": "Veřejná vybavenost",
-		"color": "#00ED00",
+		"color": "#00C300",
 		"fetchUrl": "https://api.golemio.cz/v2/gardens/",
-		"iconUrl": "climate.svg",
+		"iconUrl": "tree.svg",
 		"paragraph": "Zahrady. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
 		"popupMapper": {
 			"name": "name",
@@ -518,16 +527,22 @@
 				"Telefon": "telephone",
 				"Aktualizováno": "updated_at"
 			}
+		},
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
 		}
 	},
 	{
 		"id": "medicalinstitutions",
 		"name": "Zdravotnická zařízení",
 		"category": "Veřejná vybavenost",
-		"color": "#E92020",
+		"color": "#FF0000",
 		"fetchUrl": "https://api.golemio.cz/v2/medicalinstitutions/",
-		"iconUrl": "climate.svg",
+		"iconUrl": "cross.svg",
 		"paragraph": "Zdravotnická zařízení",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
 		"popupMapper": {
 			"name": "name",
 			"tags": {
@@ -572,10 +587,13 @@
 		"id": "municipallibraries",
 		"name": "Knihovny",
 		"category": "Veřejná vybavenost",
-		"color": "#57159e",
+		"color": "#B89000",
 		"fetchUrl": "https://api.golemio.cz/v2/municipallibraries/",
-		"iconUrl": "climate.svg",
+		"iconUrl": "books.svg",
 		"paragraph": "Knihovny",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
 		"popupMapper": {
 			"name": "name",
 			"tags": {
@@ -619,12 +637,15 @@
 	},
 	{
 		"id": "municipalpolicestations",
-		"name": "Policejní stanice",
+		"name": "Služebny Městské policie",
 		"category": "Městské informace",
-		"color": "#1818b8",
+		"color": "#0066FF",
 		"fetchUrl": "https://api.golemio.cz/v2/municipalpolicestations/",
-		"iconUrl": "climate.svg",
+		"iconUrl": "note.svg",
 		"paragraph": "Policejní stanice",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
 		"popupMapper": {
 			"name": "name",
 			"tags": {
@@ -647,10 +668,13 @@
 		"id": "playgrounds",
 		"name": "Hřiště",
 		"category": "Veřejná vybavenost",
-		"color": "#E92020",
+		"color": "#00C300",
 		"fetchUrl": "https://api.golemio.cz/v2/playgrounds/",
-		"iconUrl": "climate.svg",
+		"iconUrl": "sportcourt.svg",
 		"paragraph": "Hřiště",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
 		"popupMapper": {
 			"name": "name",
 			"tags": {
@@ -672,10 +696,13 @@
 		"id": "vehiclepositions",
 		"name": "Pozice vozidel",
 		"category": "Veřejná doprava",
-		"color": "#E92020",
+		"color": "#7200B8",
 		"fetchUrl": "https://api.golemio.cz/v2/vehiclepositions/",
-		"iconUrl": "climate.svg",
+		"iconUrl": "tram.svg",
 		"paragraph": "Pozice vozidel",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
 		"popupMapper": {
 			"name": "trip.gtfs.route_short_name",
 			"tags": {

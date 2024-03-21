@@ -17,14 +17,16 @@ import Card from "./Card.vue";
 
 import type {Layer} from "@/types";
 
+const isLoading = ref(false);
+
 function addLayer(value: Layer) {
 	isLoading.value = true;
-	pragueMap.addLayer(value).then(() => {
+	pragueMap.addLayer(value).then((res) => {
+		console.log(res);
+
 		isLoading.value = false;
 	});
 }
-
-const isLoading = ref(false);
 </script>
 
 <template>
@@ -33,14 +35,14 @@ const isLoading = ref(false);
 	>
 		<div class="flex flex-row items-center mb-12">
 			<DropdownMenu>
-				<DropdownMenuTrigger class="mr-4 flex"
-					><Button>
+				<DropdownMenuTrigger class="mr-4 flex">
+					<Button>
 						<Plus class="mr-2" />
-						Přidat vrstvu</Button
-					></DropdownMenuTrigger
-				>
+						Přidat vrstvu
+					</Button>
+				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					<div
+					<template
 						v-for="(value, key, index) in Object.groupBy(
 							cardConfig,
 							({category}) => category
@@ -53,9 +55,10 @@ const isLoading = ref(false);
 							v-for="layer in value"
 							@click="addLayer(layer as unknown as Layer)"
 							:disabled="pragueMap.activeLayers.has(layer.id)"
-							>{{ layer.name }}</DropdownMenuItem
 						>
-					</div>
+							{{ layer.name }}
+						</DropdownMenuItem>
+					</template>
 				</DropdownMenuContent>
 			</DropdownMenu>
 			<Loader2 class="w-8 h-8 animate-spin" v-if="isLoading" />
@@ -70,11 +73,6 @@ const isLoading = ref(false);
 				@remove-layer="pragueMap.removeLayer(key)"
 				class="mb-8"
 			/>
-			<!-- <Card
-				:layer-data="{pref: cardConfig[0]}"
-				class="mb-8"
-				key="testovaci"
-			/> -->
 		</TransitionGroup>
 	</div>
 </template>

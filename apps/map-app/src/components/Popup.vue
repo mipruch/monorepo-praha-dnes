@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import Tag from "./Tag.vue";
-import type {Layer, ComponentFilter} from "@/types";
 import Tags from "./Tags.vue";
 import dayjs from "dayjs";
 import {getNestedProperty} from "@/stores/mapperUtilities";
+import type {Layer, ComponentFilter} from "@/types";
 
 dayjs.locale("cs");
 
-const {properties, pref} = defineProps<{
-	properties: any;
-	pref: Layer;
+const {featureProperties, layerConfig} = defineProps<{
+	featureProperties: {[key: string]: any};
+	layerConfig: Layer;
 }>();
 
-const color = pref.color;
+const accentColor = layerConfig.color;
 
-function handleStringPath(path: string) {
+function resolveStringPath(path: string) {
 	// Získání hodnoty z properties podle zadaného path
-	const result = getNestedProperty(properties, path);
+	const result = getNestedProperty(featureProperties, path);
 
 	// Pokud není nalezena hodnota, vrátí se undefined
 	if (!result) return undefined;
@@ -28,7 +28,7 @@ function handleStringPath(path: string) {
 	}
 
 	// Pokud je hodnota časový údaj, vrátí se jako naformátovaný čas
-	if (checkISOFormat(result)) {
+	if (isStringDate(result)) {
 		return dayjs(result).format("D. M. YYYY HH:mm");
 	}
 
@@ -41,24 +41,23 @@ function handleStringPath(path: string) {
 	return result;
 }
 
-function handleTableValue(value: string | ComponentFilter): string | undefined {
-	// Pokud je hodnota string, je to přímá cesta k hodnotě v properties
+function resolveTableValue(
+	value: string | ComponentFilter
+): string | undefined {
 	if (typeof value === "string") {
-		return handleStringPath(value);
+		return resolveStringPath(value);
 	}
 
-	// Pokud je hodnota objekt, je to filtr pro získání hodnoty z properties
 	if (typeof value === "object") {
-		// Získáme pole objektů, ve kterém budeme později hledat správný objekt
-		handleObjectSearch(value);
+		return handleObjectSearch(value);
 	}
 
-	// Pokud je hodnota jiného typu, vrátí se undefined
 	return undefined;
 }
+
 function handleObjectSearch(tableValue: ComponentFilter): string | undefined {
 	const array = getNestedProperty(
-		properties,
+		featureProperties,
 		tableValue.arrayPath
 	) as Array<any>;
 
@@ -88,7 +87,8 @@ function handleObjectSearch(tableValue: ComponentFilter): string | undefined {
 
 	return value;
 }
-function checkISOFormat(input: string) {
+
+function isStringDate(input: string) {
 	const parsedDate = dayjs(input);
 	if (!parsedDate.isValid()) {
 		return false; // The date is not valid
@@ -101,53 +101,54 @@ function checkISOFormat(input: string) {
 	return isISOFormat || isOffsetFormat;
 }
 </script>
+
 <template>
 	<div
 		:class="`p-[17px] bg-grey-200 dark:bg-grey-900 dark:text-white/80 rounded-[10px] _card outline popup outline-offset-[3px]`"
 	>
 		<Tags class="mb-4">
-			<Tag :text="pref.category" />
-			<Tag :text="pref.name" color="light" />
+			<Tag :text="layerConfig.category" />
+			<Tag :text="layerConfig.name" color="light" />
 			<Tag
-				v-if="pref.popupMapper.tags?.tertiary"
-				:text="handleStringPath(pref.popupMapper.tags.tertiary)"
+				v-if="layerConfig.popupMapper.tags?.tertiary"
+				:text="resolveStringPath(layerConfig.popupMapper.tags.tertiary)"
 				color="dark"
 			/>
 		</Tags>
-		<h6 class="mb-4" v-if="pref.popupMapper?.name">
-			{{ handleStringPath(pref.popupMapper.name) }}
+		<h6 class="mb-4" v-if="layerConfig.popupMapper?.name">
+			{{ resolveStringPath(layerConfig.popupMapper.name) }}
 		</h6>
-		<p v-if="pref.popupMapper?.paragraph">
-			{{ properties[pref.popupMapper.paragraph] }}
+		<p v-if="layerConfig.popupMapper?.paragraph">
+			{{ resolveStringPath(layerConfig.popupMapper.paragraph) }}
 		</p>
-		<table v-if="pref.popupMapper.table" class="mb-4">
+		<table v-if="layerConfig.popupMapper.table" class="mb-4">
 			<colgroup>
 				<col style="width: 30%" />
 				<col style="width: 70%" />
 			</colgroup>
 			<template
-				v-for="(value, key) in pref.popupMapper.table"
+				v-for="(value, key) in layerConfig.popupMapper.table"
 				key="value"
 			>
-				<tr v-if="handleTableValue(value)">
+				<tr v-if="resolveTableValue(value)">
 					<td>{{ key }}:</td>
 					<td class="whitespace-pre-wrap">
-						{{ handleTableValue(value) }}
+						{{ resolveTableValue(value) }}
 					</td>
 				</tr>
 			</template>
 		</table>
 		<img
-			v-if="pref.popupMapper.image"
-			:src="handleStringPath(pref.popupMapper.image)"
-			:alt="handleStringPath(pref.popupMapper.name)"
+			v-if="layerConfig.popupMapper.image"
+			:src="resolveStringPath(layerConfig.popupMapper.image)"
+			:alt="resolveStringPath(layerConfig.popupMapper.name)"
 		/>
 	</div>
 </template>
 
 <style lang="scss">
 .popup {
-	outline-color: v-bind(color);
+	outline-color: v-bind(accentColor);
 
 	table {
 		width: 100%;
