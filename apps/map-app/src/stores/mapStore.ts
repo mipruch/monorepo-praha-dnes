@@ -37,6 +37,26 @@ class PragueMap {
 		},
 	});
 
+	public toggleDarkMode() {
+		if (this.map.hasLayer(this.lightBase)) {
+			this.map.removeLayer(this.lightBase);
+			this.map.addLayer(this.darkBase);
+		} else {
+			this.map.removeLayer(this.darkBase);
+			this.map.addLayer(this.lightBase);
+		}
+	}
+
+	public setLightMode() {
+		this.map.removeLayer(this.darkBase);
+		this.map.addLayer(this.lightBase);
+	}
+
+	public setDarkMode() {
+		this.map.removeLayer(this.lightBase);
+		this.map.addLayer(this.darkBase);
+	}
+
 	public initializeMap(containerId: string) {
 		this.map = L.map("viewDiv", {
 			center: [50.075, 14.46],
@@ -47,26 +67,6 @@ class PragueMap {
 			zoomAnimation: true,
 		});
 		this.cluster.addTo(this.map);
-
-		// LAYERS BUTTON
-		document
-			.getElementById("layersButton")
-			?.addEventListener("click", () => {
-				if (this.map.hasLayer(this.lightBase)) {
-					this.map.removeLayer(this.lightBase);
-					this.map.addLayer(this.darkBase);
-				} else {
-					this.map.removeLayer(this.darkBase);
-					this.map.addLayer(this.lightBase);
-				}
-			});
-		// ZOOM BUTTONS
-		document.getElementById("zoomin")?.addEventListener("click", () => {
-			this.map.flyTo(this.map.getCenter(), this.map.getZoom() + 1);
-		});
-		document.getElementById("zoomout")?.addEventListener("click", () => {
-			this.map.flyTo(this.map.getCenter(), this.map.getZoom() - 1);
-		});
 	}
 
 	public static getInstance(): PragueMap {
@@ -76,13 +76,7 @@ class PragueMap {
 		return PragueMap.instance;
 	}
 
-	private layersData = {
-		layers: [] as {id: string; collection: L.Layer}[],
-	};
-
-	public get layers() {
-		return this.layersData.layers;
-	}
+	private layers: {id: string; collection: L.Layer}[] = [];
 
 	public activeLayers: Map<
 		string,
@@ -95,36 +89,45 @@ class PragueMap {
 	public async addLayer(pref: Layer) {
 		if (!pref) {
 			console.error("Chyba při načítání mapy.");
-			return;
+			return null;
 		}
-		if (this.layersData.layers.find((layer) => layer.id === pref.id)) {
+		if (this.layers.find((layer) => layer.id === pref.id)) {
 			console.error(`Vrstva s id ${pref.id} již byla přidána.`);
-			return;
+			return null;
 		}
 
 		const [collection, res] = await makeLayer(pref);
-		this.layersData.layers.push({id: pref.id, collection: collection});
+		if (!collection || !res) {
+			console.error("Chyba při načítání dat.");
+			return null;
+		}
+		this.layers.push({id: pref.id, collection: collection});
 		this.activeLayers.set(pref.id, {
 			pref,
 			res,
 		});
 		collection.addTo(this.cluster);
+		return true;
 	}
 
 	public removeLayer(id: string) {
-		const layer = this.layersData.layers.find((layer) => layer.id === id);
+		const layer = this.layers.find((layer) => layer.id === id);
 		if (!layer) return;
 		this.cluster.removeLayer(layer?.collection);
-		this.layersData.layers = this.layersData.layers.filter(
-			(layer) => layer.id !== id
-		);
+		this.layers = this.layers.filter((layer) => layer.id !== id);
 		this.activeLayers.delete(id);
 	}
 }
 export const pragueMap = PragueMap.getInstance();
 
 async function makeLayer(pref: any) {
-	const res = await fetchData(pref.fetchUrl);
+	const {res, error} = await fetchData(pref.fetchUrl, pref.headers);
+	if (error) {
+		console.error(error);
+		[null, null];
+	}
+	// if (!res) return console.error("Chyba při načítání dat.");
+
 	const color = pref.color;
 	const json = new L.GeoJSON(res, {
 		style: {
@@ -148,10 +151,11 @@ async function makeLayer(pref: any) {
 
 		onEachFeature: (feature, layer) => {
 			if (feature.properties) {
+				const id = Math.random();
 				const popup = L.popup({
 					className: "custom-popup",
 					minWidth: 480,
-					content: `<div id="map-popup-${feature.properties.name}" />`,
+					content: `<div id="map-popup-${id}" />`,
 					pane: "popupPane",
 					closeButton: false,
 				});
@@ -162,56 +166,52 @@ async function makeLayer(pref: any) {
 						h(
 							Popup,
 							{
-								properties: feature.properties,
-								pref: pref,
-								color: color,
+								featureProperties: feature.properties,
+								layerConfig: pref,
 							} as any,
 							undefined
 						),
-						document.getElementById(
-							`map-popup-${feature.properties.name}`
-						)!
+						document.getElementById(`map-popup-${id}`)!
 					);
 				});
 			}
 		},
 	});
 
-	// const deflated = L.deflate({
-	// 	minSize: 100,
-	// 	markerLayer: pragueMap.cluster,
-	// 	markerOptions: {
-	// 		icon: L.divIcon({
-	// 			html: `<div class='marker-icon' style='background-color:${color}'><img src="home.svg"></div>`,
-	// 			iconSize: [30, 30], // size of the icon
-	// 			iconAnchor: [15, 15], // point of the icon which will correspond to marker's location
-	// 			popupAnchor: [0, -10], // point from which the popup should open relative to the iconAnchor)
-	// 		}),
-	// 	},
-	// });
-
-	// json.addTo(deflated);
-
 	return [json, res];
 }
 
-async function fetchData(url: string) {
+async function fetchData(url: string, headers?: {[key: string]: string}) {
+	console.log(url);
 	// FETCH DATA
 	const myHeaders = new Headers();
-	myHeaders.append(
-		"X-Access-Token",
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
-	);
+	Object.entries(headers || {}).forEach(([key, value]) => {
+		myHeaders.append(key, value);
+	});
 
 	const requestOptions = {
 		method: "GET",
 		headers: myHeaders,
 	};
 
-	return await fetch(url, requestOptions)
-		.then((response) => response.text())
-		.then((result) => {
-			return JSON.parse(result);
+	let response: {res: any; error: any} = {
+		res: null,
+		error: null,
+	};
+
+	await fetch(url, requestOptions)
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+			return response.text();
 		})
-		.catch((error) => console.error(error));
+		.then((result) => {
+			response.res = JSON.parse(result);
+		})
+		.catch((error) => {
+			response.error = error;
+		});
+
+	return response;
 }
