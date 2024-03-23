@@ -8,6 +8,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@aws-amplify/backend": "^0.13.0-beta.11",
+    "@aws-amplify/backend-cli": "^0.12.0-beta.13",
     "@types/jest": "^29.5.12",
     "@types/leaflet": "^1.9.8",
     "@types/leaflet.markercluster": "^1.5.4",
@@ -18,7 +20,7 @@
     "ts-jest": "^29.1.2",
     "tsconfig": "*",
     "turbo": "latest",
-    "typescript": "^5.4.0-beta"
+    "typescript": "^5.4.3"
   },
   "packageManager": "npm@10.2.0",
   "workspaces": [
@@ -28,6 +30,7 @@
   "dependencies": {
     "@types/geojson": "^7946.0.14",
     "apexcharts": "^3.46.0",
+    "aws-sdk": "^2.1584.0",
     "dayjs": "^1.11.10",
     "leaflet": "^1.9.4",
     "Leaflet.Deflate": "^2.1.0",
