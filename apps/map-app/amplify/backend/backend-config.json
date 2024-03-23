@@ -1,1 +1,44 @@
-{}
+{
+  "api": {
+    "prahadnesapi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "getLayerHandler"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "function": {
+    "getLayerHandler": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_getLayerHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getLayerHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_getLayerHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getLayerHandler"
+        }
+      ]
+    }
+  }
+}

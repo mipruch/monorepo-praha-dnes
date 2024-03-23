@@ -10,6 +10,17 @@
       "StackName": "amplify-prahadnesbackend-dev-150728",
       "StackId": "arn:aws:cloudformation:eu-central-1:012286817292:stack/amplify-prahadnesbackend-dev-150728/af9f2fc0-e91e-11ee-bca3-0606847cb8db",
       "AmplifyAppId": "dbjx7h1ytww7z"
+    },
+    "categories": {
+      "function": {
+        "getLayerHandler": {
+          "deploymentBucketName": "amplify-prahadnesbackend-dev-150728-deployment",
+          "s3Key": "amplify-builds/getLayerHandler-736d326b7a354f654b61-build.zip"
+        }
+      },
+      "api": {
+        "prahadnesapi": {}
+      }
     }
   }
 }

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/layers/{layerId}": {
+      "name": "/layers/{layerId}",
+      "lambdaFunction": "getLayerHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

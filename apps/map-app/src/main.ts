@@ -10,6 +10,11 @@ import Area from "@/components/graphs/Area.vue";
 import Nearby from "@/components/graphs/Nearby.vue";
 import List from "@/components/graphs/List.vue";
 
+import {Amplify} from "aws-amplify";
+import amplifyconfig from "./amplifyconfiguration.json";
+
+Amplify.configure(amplifyconfig);
+
 const app = createApp(App);
 
 app.component("Ring", Ring)
