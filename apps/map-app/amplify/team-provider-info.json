@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-prahadnesbackend-dev-150728-authRole",
+      "UnauthRoleArn": "arn:aws:iam::012286817292:role/amplify-prahadnesbackend-dev-150728-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::012286817292:role/amplify-prahadnesbackend-dev-150728-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-prahadnesbackend-dev-150728-deployment",
+      "UnauthRoleName": "amplify-prahadnesbackend-dev-150728-unauthRole",
+      "StackName": "amplify-prahadnesbackend-dev-150728",
+      "StackId": "arn:aws:cloudformation:eu-central-1:012286817292:stack/amplify-prahadnesbackend-dev-150728/af9f2fc0-e91e-11ee-bca3-0606847cb8db",
+      "AmplifyAppId": "dbjx7h1ytww7z"
+    }
+  }
+}
