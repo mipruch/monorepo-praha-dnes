@@ -24,7 +24,7 @@ type LayerConfig = {
 };
 
 const layers: LayerConfig[] = await fetch(
-	"https://3945gijbhc.execute-api.eu-central-1.amazonaws.com/prod/layers?excludeConfig=true"
+	"https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers?excludeConfig=true"
 ).then((r) => r.json());
 
 const isLoading = ref(false);
@@ -32,11 +32,9 @@ const isLoading = ref(false);
 async function addLayer(value: Layer) {
 	isLoading.value = true;
 	const layer: Layer = await fetch(
-		`https://3945gijbhc.execute-api.eu-central-1.amazonaws.com/prod/layers/${value.id}`
+		`https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers/${value.id}`
 	).then((r) => r.json());
 	pragueMap.addLayer(layer).then((res) => {
-		console.log(res);
-
 		isLoading.value = false;
 	});
 }

@@ -3,6 +3,7 @@
 	"display": "Default",
 	"compilerOptions": {
 		"lib": ["ESNext"],
+		"types": ["node", "jest"],
 		"composite": false,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
