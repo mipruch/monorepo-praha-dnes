@@ -12,16 +12,29 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {pragueMap} from "../stores/mapStore";
 import {ref} from "vue";
-import cardConfig from "@/stores/cardConfig.json";
 import Card from "./Card.vue";
 
 import type {Layer} from "@/types";
 
+type LayerConfig = {
+	id: string;
+	name: string;
+	category: string;
+	config: Layer;
+};
+
+const layers: LayerConfig[] = await fetch(
+	"https://3945gijbhc.execute-api.eu-central-1.amazonaws.com/prod/layers?excludeConfig=true"
+).then((r) => r.json());
+
 const isLoading = ref(false);
 
-function addLayer(value: Layer) {
+async function addLayer(value: Layer) {
 	isLoading.value = true;
-	pragueMap.addLayer(value).then((res) => {
+	const layer: Layer = await fetch(
+		`https://3945gijbhc.execute-api.eu-central-1.amazonaws.com/prod/layers/${value.id}`
+	).then((r) => r.json());
+	pragueMap.addLayer(layer).then((res) => {
 		console.log(res);
 
 		isLoading.value = false;
@@ -44,8 +57,8 @@ function addLayer(value: Layer) {
 				<DropdownMenuContent>
 					<template
 						v-for="(value, key, index) in Object.groupBy(
-							cardConfig,
-							({category}) => category
+							layers,
+							(layer) => layer.category
 						)"
 					>
 						<DropdownMenuSeparator v-if="index !== 0" />
