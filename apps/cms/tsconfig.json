@@ -1,4 +1,17 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "isolatedModules": true,
+      "module": "ESNext",
+      "moduleResolution": "Bundler",
+      "preserveWatchOutput": true,
+      "skipLibCheck": true,
+      "noEmit": true,
+      "strict": true
+    },
+    "exclude": ["node_modules"]
+  
 }

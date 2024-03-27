@@ -29,8 +29,15 @@ export const handler: Handler = async (event: any) => {
 	const res = await docClient.send(command);
 	const response = JSON.stringify(res);
 
+	const headers = {
+		"Content-Type": "application/json",
+		"Access-Control-Allow-Origin": "*",
+		"Access-Control-Allow-Methods": "GET, OPTIONS",
+	};
+
 	return {
 		statusCode: 200,
 		body: response,
+		headers,
 	};
 };

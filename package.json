@@ -28,7 +28,6 @@
 	"dependencies": {
 		"@types/geojson": "^7946.0.14",
 		"apexcharts": "^3.46.0",
-		"aws-amplify": "^6.0.21",
 		"dayjs": "^1.11.10",
 		"leaflet": "^1.9.4",
 		"Leaflet.Deflate": "^2.1.0",
