@@ -1,15 +1,19 @@
 import * as cdk from "aws-cdk-lib";
 import {Construct} from "constructs";
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
+import * as cognito from "aws-cdk-lib/aws-cognito";
+import * as iam from "aws-cdk-lib/aws-iam";
 import {AssetCode, Runtime} from "aws-cdk-lib/aws-lambda";
+import {Duration} from "aws-cdk-lib";
+import {AuthorizationType, Cors} from "aws-cdk-lib/aws-apigateway";
 
 export class PrahaDnesBackendStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
 		super(scope, id, props);
 
+		// DynamoDB table to store layers
 		const table = new dynamodb.Table(this, "layers", {
 			partitionKey: {name: "id", type: dynamodb.AttributeType.STRING},
 			tableName: "layers",
@@ -19,7 +23,7 @@ export class PrahaDnesBackendStack extends cdk.Stack {
 			// billingMode: dynamodb.BillingMode.PAY_PER_REQUEST, // Or dynamodb.BillingMode.PROVISIONED
 		});
 
-		// Lambda function to read one record by ID
+		// Lambda functions to manipulate the table
 		const readOneLambda = new lambda.Function(this, "ReadOneRecordLambda", {
 			runtime: Runtime.NODEJS_LATEST,
 			handler: "index.handler",
@@ -58,6 +62,76 @@ export class PrahaDnesBackendStack extends cdk.Stack {
 		table.grantReadData(readAllLambda);
 		table.grantWriteData(writeLambda);
 
+		// Cognito user pool
+		const userPool = new cognito.UserPool(this, "praha-dnes-userPool", {
+			signInCaseSensitive: false,
+			selfSignUpEnabled: true,
+			userVerification: {
+				emailSubject: "Verify your email for our awesome app!",
+				emailBody:
+					"Thanks for signing up to our awesome app! Your verification code is {####}",
+				emailStyle: cognito.VerificationEmailStyle.CODE,
+			},
+			userInvitation: {
+				emailSubject: "Invite to join our awesome app!",
+				emailBody:
+					"Hello {username}, you have been invited to join our awesome app! Your temporary password is {####}",
+				smsMessage:
+					"Hello {username}, your temporary password for our awesome app is {####}",
+			},
+			signInAliases: {email: true, username: false},
+
+			standardAttributes: {
+				fullname: {
+					required: true,
+					mutable: false,
+				},
+			},
+			autoVerify: {email: true},
+			mfa: cognito.Mfa.REQUIRED,
+			mfaSecondFactor: {
+				sms: false,
+				otp: true,
+			},
+			passwordPolicy: {
+				minLength: 8,
+				requireDigits: true,
+				requireLowercase: true,
+				requireUppercase: true,
+				requireSymbols: false,
+				tempPasswordValidity: Duration.days(1),
+			},
+		});
+
+		var callbackUrls = [
+			"https://" + "praha-dnes" + ".michalprucha.cz",
+			"http://localhost:3002",
+		];
+
+		const appClient = userPool.addClient("appClient", {
+			authFlows: {
+				userPassword: true,
+				userSrp: true,
+				adminUserPassword: true,
+			},
+			oAuth: {
+				flows: {
+					authorizationCodeGrant: true,
+					implicitCodeGrant: true,
+				},
+				callbackUrls: callbackUrls,
+			},
+			idTokenValidity: Duration.hours(8),
+			accessTokenValidity: Duration.hours(8),
+		});
+
+		userPool.addDomain("userPoolDomain", {
+			cognitoDomain: {
+				domainPrefix: "praha-dnes",
+			},
+		});
+
+		// API GATEWAY REST API
 		const restApi = new apigateway.RestApi(
 			this,
 			this.stackName + "RestApi",
@@ -72,6 +146,14 @@ export class PrahaDnesBackendStack extends cdk.Stack {
 			}
 		);
 
+		const authorizer = new apigateway.CognitoUserPoolsAuthorizer(
+			this,
+			"APIGatewayAuthorizer",
+			{
+				cognitoUserPools: [userPool],
+			}
+		);
+
 		restApi.root
 			.addResource("layers")
 			.addMethod(
@@ -83,7 +165,11 @@ export class PrahaDnesBackendStack extends cdk.Stack {
 			.getResource("layers")!
 			.addMethod(
 				"POST",
-				new apigateway.LambdaIntegration(writeLambda, {})
+				new apigateway.LambdaIntegration(writeLambda, {}),
+				{
+					authorizer: authorizer,
+					authorizationType: apigateway.AuthorizationType.COGNITO,
+				}
 			);
 
 		restApi.root
