@@ -78,10 +78,7 @@ function handleValue(
 		const number1 = handleValue((value as ProportionDefinition).value1);
 		const number2 = handleValue((value as ProportionDefinition).value2);
 
-		if (typeof number1 === "string" || typeof number2 === "string") {
-			return "N/A";
-		}
-		return (number1 / number2) * 100;
+		return performMathOperation([number1, number2], "proportion");
 	}
 
 	// Na základě konfigurčního souboru získáme toužené hodnoty z nafetchovaných dat (z geojson features)
@@ -192,6 +189,15 @@ function performMathOperation(
 ): number | string {
 	if (operation === "count") {
 		return values.length;
+	}
+
+	if (operation === "proportion") {
+		const number1 = values[0];
+		const number2 = values[1];
+		if (typeof number1 === "string" || typeof number2 === "string") {
+			return "N/A";
+		}
+		return (number1 / number2) * 100;
 	}
 
 	if (operation === "mostCommon") {

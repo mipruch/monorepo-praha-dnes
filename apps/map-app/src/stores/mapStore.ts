@@ -1,4 +1,4 @@
-import {h, reactive, ref, render, type Ref} from "vue";
+import {h, reactive, render} from "vue";
 import Popup from "../components/Popup.vue";
 import "leaflet";
 import "leaflet.markercluster";
@@ -36,16 +36,6 @@ class PragueMap {
 			});
 		},
 	});
-
-	public toggleDarkMode() {
-		if (this.map.hasLayer(this.lightBase)) {
-			this.map.removeLayer(this.lightBase);
-			this.map.addLayer(this.darkBase);
-		} else {
-			this.map.removeLayer(this.darkBase);
-			this.map.addLayer(this.lightBase);
-		}
-	}
 
 	public setLightMode() {
 		this.map.removeLayer(this.darkBase);
@@ -88,7 +78,7 @@ class PragueMap {
 
 	public async addLayer(pref: Layer) {
 		if (!pref) {
-			console.error("Chyba při načítání mapy.");
+			console.error("Chyba při načítání vrstvy.");
 			return null;
 		}
 		if (this.layers.find((layer) => layer.id === pref.id)) {
@@ -124,9 +114,8 @@ async function makeLayer(pref: any) {
 	const {res, error} = await fetchData(pref.fetchUrl, pref.headers);
 	if (error) {
 		console.error(error);
-		[null, null];
+		return [null, null];
 	}
-	// if (!res) return console.error("Chyba při načítání dat.");
 
 	const color = pref.color;
 	const json = new L.GeoJSON(res, {
@@ -182,8 +171,6 @@ async function makeLayer(pref: any) {
 }
 
 async function fetchData(url: string, headers?: {[key: string]: string}) {
-	console.log(url);
-	// FETCH DATA
 	const myHeaders = new Headers();
 	Object.entries(headers || {}).forEach(([key, value]) => {
 		myHeaders.append(key, value);

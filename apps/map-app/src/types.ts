@@ -11,7 +11,6 @@ export type Layer = {
 
 export type Popup = {
 	name: string;
-	title: string;
 	paragraph: string;
 	tags: {
 		tertiary: string;
