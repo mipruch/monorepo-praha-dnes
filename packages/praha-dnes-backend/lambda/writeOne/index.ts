@@ -32,7 +32,7 @@ export const handler: Handler = async (event: any) => {
 	const headers = {
 		"Content-Type": "application/json",
 		"Access-Control-Allow-Origin": "*",
-		"Access-Control-Allow-Methods": "GET, OPTIONS",
+		"Access-Control-Allow-Methods": " OPTIONS, POST",
 	};
 
 	return {

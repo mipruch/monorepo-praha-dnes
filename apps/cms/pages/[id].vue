@@ -9,23 +9,43 @@ import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker"
 
 import {schemas} from "~/schemas/schemas2";
 import getSchema from "~/schemas/getSchema";
+import {fetchAuthSession} from "aws-amplify/auth";
 
 const route = useRoute();
 
-const config = ref({
+type Config = {
+	name: string;
+	id: string;
+	json: string;
+};
+
+const config: Ref<Config> = ref({
 	name: "",
 	id: "",
 	json: "",
 });
 
+const {data: json} = await useFetch(
+	`https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers/${route.params.id}`
+);
+
+const title = useState("title");
+title.value = (json.value as Config).name;
+
 const valid = ref(false);
 
 async function publish() {
+	const {idToken} = (await fetchAuthSession()).tokens;
+
+	const headers = new Headers();
+	headers.append("Authorization", idToken);
+
 	await fetch(
 		`https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers/`,
 		{
 			method: "POST",
 			body: config.value.json,
+			headers: headers,
 		}
 	);
 }
@@ -33,10 +53,6 @@ async function publish() {
 const errors = ref<string[]>([]);
 
 onMounted(async () => {
-	config.value.json = await fetch(
-		`https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers/${route.params.id}`
-	).then((r) => r.text());
-
 	const monaco = await import("monaco-editor");
 	self.MonacoEnvironment = {
 		getWorker(_, label) {
@@ -62,7 +78,11 @@ onMounted(async () => {
 
 	// inicializace editoru
 	var modelUri = monaco.Uri.parse("a://b/foo.json"); // a made up unique URI for our model
-	var model = monaco.editor.createModel(config.value.json, "json", modelUri);
+	var model = monaco.editor.createModel(
+		JSON.stringify(json.value),
+		"json",
+		modelUri
+	);
 	monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
 		validate: true,
 		schemas: getSchema(modelUri),
@@ -113,11 +133,11 @@ onMounted(async () => {
 </script>
 
 <template>
-	<div class="grid grid-cols-3 gap-8 splitView">
-		<div class="p-12 h-full col-span-2">
+	<div class="grid lg:grid-cols-3 gap-8 splitView">
+		<div class="p-12 h-full col-span-2 w-full">
 			<div
 				id="container"
-				class="h-full shadow-[0px_0.5rem_2rem_rgba(0,0,0,0.2)] rounded-xl overflow-hidden"
+				class="h-full shadow-[0px_0.5rem_2rem_rgba(0,0,0,0.2)] rounded-xl overflow-hidden outline-grey-300"
 			/>
 		</div>
 		<div class="mt-8">
@@ -135,13 +155,9 @@ onMounted(async () => {
 			</template>
 			<p v-else>Žádné errory, JSON se zdá být správně naformátován.</p>
 
-			<button
-				@click="publish"
-				:disabled="!valid"
-				class="border rounded px-4 py-2 mt-4 bg-blue-500 text-white hover:bg-blue-600 transition disabled:bg-slate-200 disabled:text-black disabled:opacity-30 disabled:cursor-not-allowed"
-			>
+			<Button @click="publish" :disabled="!valid" class="mt-4">
 				Publikovat
-			</button>
+			</Button>
 		</div>
 	</div>
 </template>

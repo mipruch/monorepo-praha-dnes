@@ -57,10 +57,21 @@ export class PrahaDnesBackendStack extends cdk.Stack {
 			},
 		});
 
+		// Lambda function to delete a record
+		const deleteLambda = new lambda.Function(this, "DeleteRecordLambda", {
+			runtime: Runtime.NODEJS_LATEST,
+			handler: "index.handler",
+			code: lambda.Code.fromAsset(`./lambda/deleteOne`),
+			environment: {
+				TABLE: table.tableName,
+			},
+		});
+
 		// Grant the Lambda function read/write permissions to the table
 		table.grantReadData(readOneLambda);
 		table.grantReadData(readAllLambda);
 		table.grantWriteData(writeLambda);
+		table.grantWriteData(deleteLambda);
 
 		// Cognito user pool
 		const userPool = new cognito.UserPool(this, "praha-dnes-userPool", {
@@ -143,6 +154,11 @@ export class PrahaDnesBackendStack extends cdk.Stack {
 					dataTraceEnabled: true,
 				},
 				cloudWatchRole: true,
+				defaultCorsPreflightOptions: {
+					allowOrigins: Cors.ALL_ORIGINS,
+					allowMethods: Cors.ALL_METHODS,
+					allowHeaders: ["*"],
+				},
 			}
 		);
 
@@ -178,6 +194,18 @@ export class PrahaDnesBackendStack extends cdk.Stack {
 			.addMethod(
 				"GET",
 				new apigateway.LambdaIntegration(readOneLambda, {})
+			);
+
+		restApi.root
+			.getResource("layers")!
+			.getResource("{id}")!
+			.addMethod(
+				"DELETE",
+				new apigateway.LambdaIntegration(deleteLambda, {}),
+				{
+					authorizer: authorizer,
+					authorizationType: apigateway.AuthorizationType.COGNITO,
+				}
 			);
 	}
 }
