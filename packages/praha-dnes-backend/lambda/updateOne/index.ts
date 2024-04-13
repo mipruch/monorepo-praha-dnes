@@ -1,7 +1,10 @@
 import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
-import {PutCommand, DynamoDBDocumentClient} from "@aws-sdk/lib-dynamodb";
+import {
+	PutCommand,
+	DynamoDBDocumentClient,
+	UpdateCommand,
+} from "@aws-sdk/lib-dynamodb";
 import {Handler} from "aws-cdk-lib/aws-lambda";
-import {v4 as uuidv4} from "uuid";
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -23,20 +26,24 @@ export const handler: Handler = async (event: any) => {
 			headers,
 		};
 	}
-	const crypto = require("crypto");
-
-	body.id = crypto.randomBytes(16).toString("hex");
 
 	try {
-		const command = new PutCommand({
+		const command = new UpdateCommand({
 			TableName: tableName,
-			Item: {
-				id: body.id,
-				name: body.name,
-				category: body.category,
-				config: JSON.stringify(body),
+			Key: {
+				id: event.pathParameters.id,
 			},
-			ConditionExpression: "attribute_not_exists(id)",
+			UpdateExpression:
+				"set #n = :name, category = :category, config = :config",
+			ExpressionAttributeNames: {
+				"#n": "name",
+			},
+			ExpressionAttributeValues: {
+				":name": body.name,
+				":category": body.category,
+				":config": JSON.stringify(body),
+			},
+			ConditionExpression: "attribute_exists(id)",
 		});
 
 		const res = await docClient.send(command);
@@ -51,7 +58,7 @@ export const handler: Handler = async (event: any) => {
 		if ((error as any).name === "ConditionalCheckFailedException") {
 			return {
 				statusCode: 409,
-				body: "Vrstva s tímto ID již existuje.",
+				body: "Vrstva s tímto ID neexistuje.",
 				headers,
 			};
 		}

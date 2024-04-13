@@ -12,16 +12,21 @@ const {
 	data: layers,
 	pending,
 	refresh,
-} = useFetch(
+} = useFetch<
+	{
+		id: string;
+		name: string;
+	}[]
+>(
 	"https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers?excludeConfig=true",
 	{method: "GET"}
 );
 
 async function remove(layerId: string) {
-	const {idToken} = (await fetchAuthSession()).tokens;
+	const {idToken} = (await fetchAuthSession()).tokens!;
 
 	const headers = new Headers();
-	headers.append("Authorization", idToken);
+	headers.append("Authorization", idToken as any as string);
 
 	const {data} = useFetch(
 		`https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers/${layerId}`,
@@ -29,7 +34,7 @@ async function remove(layerId: string) {
 			method: "DELETE",
 			headers: headers,
 			onResponse: (response) => {
-				layers.value = layers.value.filter(
+				layers.value = layers.value!.filter(
 					(layer) => layer.id !== layerId
 				);
 			},
@@ -42,13 +47,21 @@ async function remove(layerId: string) {
 </script>
 <template>
 	<div class="max-w-7xl mx-auto px-4 pb-12 mt-8">
-		<h3 class="text-2xl font-semibold mb-6 pl-6">Seznam vrstev</h3>
+		<div class="flex justify-between items-center mb-6 pl-6">
+			<h3 class="text-2xl font-semibold">Seznam vrstev</h3>
+			<NuxtLink to="/new-layer">
+				<Button variant="outline">
+					<LucidePlus class="mr-2" />
+					Přidat vrstvu
+				</Button>
+			</NuxtLink>
+		</div>
 		<div class="flex flex-col gap-2">
-			<a
-				v-for="layer in layers"
+			<NuxtLink
+				v-for="layer in layers!"
 				key="layer.id"
 				class="flex justify-between group hover:bg-gray-100 py-4 px-6 rounded-lg items-center"
-				:href="`/${layer.id}`"
+				:to="`/layers-${layer.id}`"
 			>
 				<div>
 					<p class="text-lg mb-1">
@@ -67,7 +80,7 @@ async function remove(layerId: string) {
 				>
 					<LucideTrash class="" />
 				</Button>
-			</a>
+			</NuxtLink>
 		</div>
 	</div>
 </template>
