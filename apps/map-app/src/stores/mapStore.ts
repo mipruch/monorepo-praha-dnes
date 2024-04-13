@@ -76,13 +76,13 @@ class PragueMap {
 		}
 	> = reactive(new Map());
 
-	public async addLayer(pref: Layer) {
+	public async addLayer(pref: Layer, id: string) {
 		if (!pref) {
 			console.error("Chyba při načítání vrstvy.");
 			return null;
 		}
-		if (this.layers.find((layer) => layer.id === pref.id)) {
-			console.error(`Vrstva s id ${pref.id} již byla přidána.`);
+		if (this.layers.find((layer) => layer.id === id)) {
+			console.error(`Vrstva s id ${id} již byla přidána.`);
 			return null;
 		}
 
@@ -91,8 +91,8 @@ class PragueMap {
 			console.error("Chyba při načítání dat.");
 			return null;
 		}
-		this.layers.push({id: pref.id, collection: collection});
-		this.activeLayers.set(pref.id, {
+		this.layers.push({id: id, collection: collection});
+		this.activeLayers.set(id, {
 			pref,
 			res,
 		});

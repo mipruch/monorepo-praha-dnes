@@ -29,12 +29,12 @@ const layers: LayerConfig[] = await fetch(
 
 const isLoading = ref(false);
 
-async function addLayer(value: Layer) {
+async function addLayer(value: LayerConfig) {
 	isLoading.value = true;
 	const layer: Layer = await fetch(
 		`https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers/${value.id}`
 	).then((r) => r.json());
-	pragueMap.addLayer(layer).then((res) => {
+	pragueMap.addLayer(layer, value.id).then((res) => {
 		isLoading.value = false;
 	});
 }
@@ -64,7 +64,7 @@ async function addLayer(value: Layer) {
 						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							v-for="layer in value"
-							@click="addLayer(layer as unknown as Layer)"
+							@click="addLayer(layer as LayerConfig)"
 							:disabled="pragueMap.activeLayers.has(layer.id)"
 						>
 							{{ layer.name }}
@@ -74,7 +74,12 @@ async function addLayer(value: Layer) {
 			</DropdownMenu>
 			<Loader2 class="w-8 h-8 animate-spin" v-if="isLoading" />
 		</div>
-		<TransitionGroup name="cards" tag="div" class="relative">
+		<TransitionGroup
+			name="cards"
+			tag="div"
+			class="relative"
+			v-if="pragueMap.activeLayers.size > 0"
+		>
 			<Card
 				v-for="[key, value] in Array.from(
 					pragueMap.activeLayers.entries()
@@ -85,6 +90,9 @@ async function addLayer(value: Layer) {
 				class="mb-8"
 			/>
 		</TransitionGroup>
+		<div v-else class="text-center text-gray-400">
+			Žádné vrstvy nejsou přidány. Vyberte vrstvu.
+		</div>
 	</div>
 </template>
 

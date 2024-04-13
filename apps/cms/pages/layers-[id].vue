@@ -10,6 +10,7 @@ import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker"
 import {schemas} from "~/schemas/schemas2";
 import getSchema from "~/schemas/getSchema";
 import {fetchAuthSession} from "aws-amplify/auth";
+import {toast} from "~/components/ui/toast/use-toast";
 
 const route = useRoute();
 
@@ -34,26 +35,40 @@ title.value = (json.value as Config).name;
 
 const valid = ref(false);
 
-async function publish() {
-	const {idToken} = (await fetchAuthSession()).tokens;
+async function edit() {
+	const {idToken} = (await fetchAuthSession()).tokens!;
 
 	const headers = new Headers();
-	headers.append("Authorization", idToken);
+	headers.append("Authorization", idToken as any as string);
 
-	await fetch(
-		`https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers/`,
+	const body = JSON.parse(config.value.json);
+
+	const {error} = await useFetch(
+		`https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers/${route.params.id}`,
 		{
-			method: "POST",
-			body: config.value.json,
+			method: "PUT",
+			body: body,
 			headers: headers,
+			onResponseError: ({request, response, options}) => {
+				toast({
+					title: "Vyskytla se chyba.",
+					description: response._data,
+					variant: "destructive",
+				});
+			},
 		}
 	);
+
+	if (!error.value) {
+		await navigateTo(`/`);
+	}
 }
 
 const errors = ref<string[]>([]);
 
 onMounted(async () => {
 	const monaco = await import("monaco-editor");
+
 	self.MonacoEnvironment = {
 		getWorker(_, label) {
 			if (label === "json") {
@@ -77,7 +92,7 @@ onMounted(async () => {
 	};
 
 	// inicializace editoru
-	var modelUri = monaco.Uri.parse("a://b/foo.json"); // a made up unique URI for our model
+	var modelUri = monaco.Uri.parse(Math.random().toString()); // a made up unique URI for our model
 	var model = monaco.editor.createModel(
 		JSON.stringify(json.value),
 		"json",
@@ -145,7 +160,7 @@ onMounted(async () => {
 			<h2 class="text-2xl font-semibold mb-4">{{ config.name }}</h2>
 
 			<label class="opacity-50">Id vrstvy</label>
-			<h4 class="mb-4">{{ config.id }}</h4>
+			<h4 class="mb-4">{{ route.params.id }}</h4>
 
 			<label class="opacity-50">Errory:</label>
 			<template v-if="!valid">
@@ -155,7 +170,7 @@ onMounted(async () => {
 			</template>
 			<p v-else>Žádné errory, JSON se zdá být správně naformátován.</p>
 
-			<Button @click="publish" :disabled="!valid" class="mt-4">
+			<Button @click="edit" :disabled="!valid" class="mt-4">
 				Publikovat
 			</Button>
 		</div>

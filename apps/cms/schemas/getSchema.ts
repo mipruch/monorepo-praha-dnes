@@ -6,10 +6,6 @@ export default function getSchema(modelUri: any) {
 			schema: {
 				type: "object",
 				properties: {
-					id: {
-						type: "string",
-						pattern: "^[a-z0-9-]+$",
-					},
 					name: {
 						type: "string",
 					},
@@ -71,7 +67,6 @@ export default function getSchema(modelUri: any) {
 					},
 				},
 				required: [
-					"id",
 					"name",
 					"category",
 					"color",

@@ -67,11 +67,21 @@ export class PrahaDnesBackendStack extends cdk.Stack {
 			},
 		});
 
+		const updateLambda = new lambda.Function(this, "UpdateRecordLambda", {
+			runtime: Runtime.NODEJS_LATEST,
+			handler: "index.handler",
+			code: lambda.Code.fromAsset(`./lambda/updateOne`),
+			environment: {
+				TABLE: table.tableName,
+			},
+		});
+
 		// Grant the Lambda function read/write permissions to the table
 		table.grantReadData(readOneLambda);
 		table.grantReadData(readAllLambda);
 		table.grantWriteData(writeLambda);
 		table.grantWriteData(deleteLambda);
+		table.grantWriteData(updateLambda);
 
 		// Cognito user pool
 		const userPool = new cognito.UserPool(this, "praha-dnes-userPool", {
@@ -202,6 +212,18 @@ export class PrahaDnesBackendStack extends cdk.Stack {
 			.addMethod(
 				"DELETE",
 				new apigateway.LambdaIntegration(deleteLambda, {}),
+				{
+					authorizer: authorizer,
+					authorizationType: apigateway.AuthorizationType.COGNITO,
+				}
+			);
+
+		restApi.root
+			.getResource("layers")!
+			.getResource("{id}")!
+			.addMethod(
+				"PUT",
+				new apigateway.LambdaIntegration(updateLambda, {}),
 				{
 					authorizer: authorizer,
 					authorizationType: apigateway.AuthorizationType.COGNITO,

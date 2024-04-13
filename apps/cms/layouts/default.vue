@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const title = useState("title");
+import Toaster from "@/components/ui/toast/Toaster.vue";
 </script>
 
 <template>
@@ -31,5 +32,6 @@ const title = useState("title");
 		</header>
 
 		<slot />
+		<Toaster />
 	</div>
 </template>
