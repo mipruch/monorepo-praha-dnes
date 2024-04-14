@@ -65,7 +65,8 @@ const baseSchema = {
 			},
 		},
 	},
-	required: ["id", "name", "category", "color", "fetchUrl", "popupMapper"],
+	required: ["name", "category", "color", "fetchUrl", "popupMapper"],
+	additionalProperties: false,
 };
 const popupMapperSchema = {
 	$id: "http://example.com/schemas/popupMapperSchema.json",
