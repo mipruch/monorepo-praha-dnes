@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {getCurrentUser, fetchAuthSession} from "aws-amplify/auth";
+import {toast} from "~/components/ui/toast/use-toast";
 
 definePageMeta({
 	title: "Seznam vrstev",
@@ -28,7 +29,7 @@ async function remove(layerId: string) {
 	const headers = new Headers();
 	headers.append("Authorization", idToken as any as string);
 
-	const {data} = useFetch(
+	const {data, error} = await useFetch(
 		`https://abuz6lqd47.execute-api.eu-central-1.amazonaws.com/prod/layers/${layerId}`,
 		{
 			method: "DELETE",
@@ -43,6 +44,12 @@ async function remove(layerId: string) {
 			},
 		}
 	);
+
+	if (!error.value) {
+		toast({
+			title: "Vrstva byla úspěšně odstraněna.",
+		});
+	}
 }
 </script>
 <template>

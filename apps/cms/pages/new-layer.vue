@@ -22,7 +22,7 @@ type Config = {
 const config: Ref<Config> = ref({
 	name: "",
 	id: "",
-	json: '{"id": "test","name": "","category": "","fetchUrl": "https://path.to.api","headers": {},"paragraph": "","iconUrl": "","color": "#123456","popupMapper": {},"widgets": {}}',
+	json: '{"name": "","category": "","fetchUrl": "https://path.to.api","headers": {},"paragraph": "","iconUrl": "","color": "#123456","popupMapper": {},"widgets": {}}',
 });
 
 const title = useState("title");
@@ -116,15 +116,11 @@ onMounted(async () => {
 		markers.forEach((marker) => {
 			errors.value.push(marker.message);
 		});
-		{
-			try {
-				if (ajvValidate) {
-					ajvValidate(JSON.parse(model.getValue()));
-				}
-				valid.value = true;
-			} catch (e) {
-				valid.value = false;
-			}
+		try {
+			ajvValidate!(JSON.parse(model.getValue()));
+			valid.value = true;
+		} catch (e) {
+			valid.value = false;
 		}
 	}
 	editor.onDidChangeModelContent(function (e) {
