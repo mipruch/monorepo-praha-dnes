@@ -8,6 +8,7 @@ export default defineNuxtConfig({
 	},
 	app: {
 		head: {
+			title: "Praha dnes CMS",
 			charset: "utf-8",
 			viewport: "width=device-width, initial-scale=1",
 			htmlAttrs: {
