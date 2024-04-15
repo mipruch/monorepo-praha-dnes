@@ -300,6 +300,7 @@ function formatNumber(number: number, decimals: number): string | number {
 					variant="ghost"
 					size="icon"
 					@click="$emit('removeLayer')"
+					aria-label="Odstranit vrstvu"
 				>
 					<Trash2 />
 				</Button>
