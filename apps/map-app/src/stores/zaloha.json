@@ -1,0 +1,792 @@
+[
+	{
+		"name": "Kvalita ovzduší",
+		"paragraph": "Mikroklima. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate. Widgety obsahující průměrné hodnoty, jsou zprůměrované aktuální hodnoty všech senzorů a nejedná se tak o dlouhodobý průměr. Jejich účelem je poskytnout uživateli aktuální informaci o stavu mikroklimatu. Smogové události se vyhlašují na základě dlohodobých průměrů. Zdroj dat: Golemio, ČHMÚ.",
+		"color": "#FFCE1F",
+		"fetchUrl": "https://api.golemio.cz/v2/airqualitystations/",
+		"iconUrl": "climate.svg",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
+		"popupMapper": {
+			"name": "name",
+			"table": {
+				"ID": "id",
+				"Městská část": "district",
+				"Aktualizováno": "updated_at",
+				"Index kvality ovzduší": "measurement.AQ_hourly_index",
+				"PM10": {
+					"arrayPath": "measurement.components",
+					"where": {
+						"path": "type",
+						"equals": "PM10"
+					},
+					"valuePath": "averaged_time.value",
+					"unitPath": ""
+				},
+				"PM2.5": {
+					"arrayPath": "measurement.components",
+					"where": {
+						"path": "type",
+						"equals": "PM2_5"
+					},
+					"valuePath": "averaged_time.value",
+					"unitPath": ""
+				},
+				"NO2": {
+					"arrayPath": "measurement.components",
+					"where": {
+						"path": "type",
+						"equals": "NO2"
+					},
+					"valuePath": "averaged_time.value",
+					"unitPath": ""
+				},
+				"SO2": {
+					"arrayPath": "measurement.components",
+					"where": {
+						"path": "type",
+						"equals": "SO2"
+					},
+					"valuePath": "averaged_time.value",
+					"unitPath": ""
+				},
+				"O3": {
+					"arrayPath": "measurement.components",
+					"where": {
+						"path": "type",
+						"equals": "O3"
+					},
+					"valuePath": "averaged_time.value",
+					"unitPath": ""
+				}
+			}
+		},
+		"category": "Počasí",
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet výsledků",
+					"value": {
+						"mathOperation": "countFeatures"
+					},
+					"text": "Celkový počet senzorů."
+				},
+				{
+					"title": "Index kvality ovzduší",
+					"value": {
+						"mathOperation": "mostCommon",
+						"attributePath": "measurement.AQ_hourly_index"
+					},
+					"text": "Nejčastěji vyskytovaný index kvality ovzduší."
+				}
+			],
+			"medium": [
+				{
+					"title": "Průměrná hodnota PM10",
+					"description": "Průměrná hodnota PM10 je ~~{{value}} µg/m3~~.",
+					"graph": {
+						"type": "Bar",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "PM10"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"minValue": 0,
+						"maxValue": 75,
+						"strokeColor": "gradient",
+						"unit": "µg/m3"
+					}
+				},
+				{
+					"title": "Průměrná hodnota PM2.5",
+					"description": "Průměrná hodnota PM2.5 je ~~{{value}} µg/m3~~.",
+					"graph": {
+						"type": "Tachometer",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "PM2_5"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"minValue": 0,
+						"maxValue": 50,
+						"strokeColor": {
+							"0": "green",
+							"10": "yellow",
+							"25": "red"
+						}
+					}
+				},
+				{
+					"title": "Průměrná hodnota NO2",
+					"description": "Průměrná hodnota NO2 je ~~{{value}} µg/m3~~.",
+					"graph": {
+						"type": "Tachometer",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "NO2"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"minValue": 0,
+						"maxValue": 250,
+						"strokeColor": {
+							"0": "green",
+							"40": "yellow",
+							"200": "red"
+						}
+					}
+				},
+				{
+					"title": "Průměrná hodnota O3",
+					"description": "Průměrná hodnota O3 je ~~{{value}} µg/m3~~.",
+					"graph": {
+						"type": "Tachometer",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "O3"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"minValue": 0,
+						"maxValue": 150,
+						"strokeColor": {
+							"0": "green",
+							"50": "yellow",
+							"100": "red"
+						}
+					}
+				},
+				{
+					"title": "Průměrná hodnota SO2",
+					"description": "Průměrná hodnota SO2 je ~~{{value}} µg/m3~~.",
+					"graph": {
+						"type": "Tachometer",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": {
+								"arrayPath": "measurement.components",
+								"where": {
+									"path": "type",
+									"equals": "SO2"
+								},
+								"valuePath": "averaged_time.value"
+							}
+						},
+						"minValue": 0,
+						"maxValue": 75,
+						"strokeColor": {
+							"0": "green",
+							"20": "yellow",
+							"50": "red"
+						}
+					}
+				}
+			]
+		}
+	},
+	{
+		"id": "medicalinstitutions",
+		"name": "Zdravotnická zařízení",
+		"category": "Veřejná vybavenost",
+		"color": "#FF0000",
+		"fetchUrl": "https://api.golemio.cz/v2/medicalinstitutions/",
+		"iconUrl": "cross.svg",
+		"paragraph": "Datová sada obsahuje nemocnice, polikliniky, lékárny a další zdravotnická zařízení. Nabízí informace o lokaci, názvu, adrese, kontaktních údajů a otevírací době. Zdroj dat: Golemio",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
+		"popupMapper": {
+			"name": "name",
+			"tags": {"tertiary": "type.description", "warning": ""},
+			"image": "",
+			"paragraph": "description",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Městská část": "district",
+				"Web": "url",
+				"Telefon": "telephone",
+				"E-mail": "email",
+				"Aktualizováno": "updated_at"
+			}
+		},
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet výsledků",
+					"value": {"mathOperation": "countFeatures"},
+					"text": "Celkový počet zařízení."
+				},
+				{
+					"title": "Počet právě otevřených zařízení",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"pathDay": "day_of_week",
+								"pathTimeOpens": "opens",
+								"pathTimeCloses": "closes",
+								"equals": "OPEN_NOW"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "Počet právě otevřených zařízení."
+				}
+			]
+		}
+	},
+	{
+		"id": "zahrady",
+		"name": "Zahrady",
+		"category": "Veřejná vybavenost",
+		"color": "#00C300",
+		"fetchUrl": "https://api.golemio.cz/v2/gardens/",
+		"iconUrl": "tree.svg",
+		"paragraph": "Datová sada pražských zahrad obsahuje informace o názvu zahrady, otevírací době, adrese, městské části, popisu, vybavenosti a obrázek. Tato data jsou k dispozici i v mobilní aplikaci Moje Praha. Zdroj dat: Golemio.",
+		"popupMapper": {
+			"name": "name",
+			"tags": {"tertiary": "", "warning": ""},
+			"image": "image.url",
+			"paragraph": "description",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Web": "url",
+				"Otevírací doba": {
+					"arrayPath": "properties",
+					"where": {"path": "id", "equals": "doba"},
+					"valuePath": "value"
+				},
+				"Telefon": "telephone",
+				"Aktualizováno": "updated_at"
+			}
+		},
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet výsledků",
+					"value": {"mathOperation": "countFeatures"},
+					"text": "Celkový počet zahrad."
+				}
+			]
+		}
+	},
+	{
+		"id": "municipallibraries",
+		"name": "Knihovny",
+		"category": "Veřejná vybavenost",
+		"color": "#B89000",
+		"fetchUrl": "https://api.golemio.cz/v2/municipallibraries/",
+		"iconUrl": "books.svg",
+		"paragraph": "Datová sada nabízí kontaktní údaje, adresu, název knihovny, městskou část, otevírací dobu a dostupné služby. Data jsou nabízena také v mobilní aplikace Moje Praha a aplikaci Atlas Prahy. Zdroj dat: Golemio",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
+		"popupMapper": {
+			"name": "name",
+			"tags": {"tertiary": "", "warning": ""},
+			"image": "",
+			"paragraph": "description",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Městská část": "district",
+				"Web": "web",
+				"Telefon": "telephone",
+				"E-mail": "email",
+				"Aktualizováno": "updated_at",
+				"Služby": "services.name"
+			}
+		},
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet právě otevřených knihoven",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"pathDay": "day_of_week",
+								"pathTimeOpens": "opens",
+								"pathTimeCloses": "closes",
+								"equals": "OPEN_NOW"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "právě otevřených knihoven."
+				},
+				{
+					"title": "Počet dnes otevřených knihoven",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"equals": "OPEN_TODAY"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "dnes otevřených knihoven."
+				}
+			]
+		}
+	},
+	{
+		"id": "verejna-sprava",
+		"name": "Informace o úřadech",
+		"paragraph": "Veřejná správa. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
+		"color": "#FF5A00",
+		"fetchUrl": "https://api.golemio.cz/v2/municipalauthorities/",
+		"iconUrl": "home.svg",
+		"popupMapper": {
+			"name": "name",
+			"tags": {"tertiary": "type.description", "warning": ""},
+			"image": "image.url",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Web": "web",
+				"Telefon": "telephone",
+				"Aktualizováno": "updated_at"
+			}
+		},
+		"category": "Městské informace",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet úřadů",
+					"value": {"mathOperation": "countFeatures"},
+					"text": "Celkový počet úřadů městské správy."
+				},
+				{
+					"title": "Počet městských částí",
+					"value": {
+						"mathOperation": "countUnique",
+						"attributePath": "district"
+					},
+					"text": "Celkový počet městských částí."
+				},
+				{
+					"title": "Počet dnes otevřených úřadů",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"equals": "OPEN_TODAY"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "Počet dnes otevřených úřadů."
+				},
+				{
+					"title": "Počet právě otevřených úřadů",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "opening_hours",
+							"where": {
+								"path": "day_of_week",
+								"pathDay": "day_of_week",
+								"pathTimeOpens": "opens",
+								"pathTimeCloses": "closes",
+								"equals": "OPEN_NOW"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "Počet právě otevřených úřadů."
+				}
+			]
+		},
+		"trashWidgets": {
+			"medium": [
+				{
+					"title": "PM2.5",
+					"graph": {
+						"type": "Area",
+						"size": "small",
+						"series": [
+							{
+								"name": "PM2.5",
+								"data": [30, 91, 45, 80, 50, 30, 70, 60, 100]
+							}
+						],
+						"xcategories": [
+							"1.1.",
+							"2.1.",
+							"3.1.",
+							"4.1.",
+							"5.1.",
+							"6.1.",
+							"7.1.",
+							"8.1.",
+							"9.1."
+						]
+					}
+				},
+				{
+					"title": "PM2.5",
+					"description": "Aktuální hodnota PM2.5 je  mq/m3. Fugiat nisi ullamco elit est dolore occaecat.",
+					"graph": {"type": "Nearby"}
+				},
+				{
+					"title": "PM2.5",
+					"description": "Aktuální hodnota PM2.5 je {{value}} mq/m3. Fugiat nisi ullamco elit est dolore occaecat.",
+					"graph": {
+						"type": "Bar",
+						"value": 10,
+						"strokeColor": "linear-gradient(to right,#ff5a00,#cace00,#00ed00,#00b8a2,#0066ff)"
+					}
+				},
+				{
+					"title": "Vytíženost parkovišť",
+					"description": "Vytíženost všech parkovišť dohromady je {{value}} %.",
+					"graph": {
+						"type": "Tachometer",
+						"value": 26,
+						"minValue": 18,
+						"maxValue": 28,
+						"unit": "°",
+						"colorScheme": "blue"
+					}
+				},
+				{
+					"title": "Vytíženost parkovišť",
+					"description": "Vytíženost všech parkovišť dohromady je {{value}} %.",
+					"graph": {
+						"type": "Ring",
+						"value": 49,
+						"strokeColor": "blue"
+					}
+				}
+			],
+			"large": [
+				{
+					"title": "Nejméně vytížená parkoviště",
+					"graph": {
+						"type": "List",
+						"paragraph": "Seznam parkovišt s největším počtem volných míst:",
+						"items": [
+							"Přátelství 356/61",
+							"Pražská 356/61",
+							"Pražská 356/61",
+							"Pražská 356/61",
+							"Pražská 356/61"
+						]
+					}
+				},
+				{
+					"title": "Nejméně vytížená parkoviště",
+					"graph": {
+						"type": "Bar",
+						"size": "small",
+						"series": [
+							{"data": [30, 91, 45, 80, 50, 30, 70, 60, 100]}
+						],
+						"unit": "Kč"
+					}
+				}
+			]
+		}
+	},
+	{
+		"id": "vehiclepositions",
+		"name": "Pozice vozidel PID",
+		"category": "Veřejná doprava",
+		"color": "#7200B8",
+		"fetchUrl": "https://api.golemio.cz/v2/vehiclepositions/",
+		"iconUrl": "tram.svg",
+		"paragraph": "Pozice vozidel",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
+		"popupMapper": {
+			"name": "trip.gtfs.route_short_name",
+			"tags": {"tertiary": "", "warning": ""},
+			"table": {
+				"Zpoždění v minutách": "last_position.delay.actual",
+				"Rychlost": "last_position.speed",
+				"Dopravce": "trip.agency_name.real",
+				"Linka": "trip.gtfs.route_short_name",
+				"Registrační číslo vozidla": "trip.vehicle_registration_number",
+				"Typ vozidla": "trip.vehicle_type.description_cs",
+				"Nízkopodlařní": "trip.wheelchair_accessible",
+				"Klimatizace": "trip.air_conditioned",
+				"Poslední aktualizace": "last_position.origin_timestamp"
+			}
+		},
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet vozidel",
+					"value": {"mathOperation": "countFeatures"},
+					"text": "Celkový počet vozidel."
+				},
+				{
+					"title": "Kumulované zpoždění",
+					"value": {
+						"mathOperation": "sum",
+						"attributePath": "last_position.delay.actual"
+					},
+					"text": "Kumulované zpoždění je ~~{{value}}~~ minut."
+				}
+			]
+		}
+	},
+	{
+		"id": "playgrounds",
+		"name": "Hřiště",
+		"category": "Veřejná vybavenost",
+		"color": "#00C300",
+		"fetchUrl": "https://api.golemio.cz/v2/playgrounds/",
+		"iconUrl": "sportcourt.svg",
+		"paragraph": "Datová sada obsahuje krátký popis jednotlivých hřišť, jejich název, obrázek, adresu, městskou část, odkaz na web a vybavenost. Data jsou nabízena v aplikaci Moje Praha a na spoustě webových stránek, nepříklad na webu hristepraha.cz. Zdroj dat: Golemio.",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
+		"popupMapper": {
+			"name": "name",
+			"tags": {"tertiary": "", "warning": ""},
+			"image": "image.url",
+			"paragraph": "content",
+			"table": {
+				"Adresa": "address.address_formatted",
+				"Městská část": "district",
+				"Web": "url",
+				"Aktualizováno": "updated_at",
+				"Služby": "properties.description"
+			}
+		},
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet hřišť",
+					"value": {"mathOperation": "countFeatures"},
+					"text": "Celkový počet hřišť."
+				},
+				{
+					"title": "Počet hřišť se ZOO koutky",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "properties",
+							"where": {
+								"path": "description",
+								"equals": "ZOO koutky"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "hřišť se ZOO koutky."
+				},
+				{
+					"title": "Počet hřišť s občerstvením",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "properties",
+							"where": {
+								"path": "description",
+								"equals": "Restaurace nebo kavárny v bezprostřední blízkosti"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "hřišť s občerstvením v bezprostřední blízkosti."
+				},
+				{
+					"title": "Počet hřišť s dostupnou vodou",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "properties",
+							"where": {
+								"path": "description",
+								"equals": "Voda-hydrant nebo umyvadlo"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "hřišť s dostupnou vodou."
+				},
+				{
+					"title": "Počet hřišť s WC",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "properties",
+							"where": {
+								"path": "description",
+								"equals": "WC na hřišti nebo v bezprostřední blízkosti"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "hřišť s WC na hřišti nebo v blízkosti."
+				},
+				{
+					"title": "Počet hřišť s fitness prvky",
+					"value": {
+						"mathOperation": "count",
+						"attributePath": {
+							"arrayPath": "properties",
+							"where": {
+								"path": "description",
+								"equals": "Fitness prvky"
+							},
+							"valuePath": ""
+						}
+					},
+					"text": "hřišť s fitness prvky."
+				}
+			]
+		}
+	},
+	{
+		"id": "parkoviste",
+		"name": "Parkoviště",
+		"paragraph": "Parkoviště. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
+		"color": "#0066FF",
+		"fetchUrl": "https://api.golemio.cz/v2/parking/",
+		"iconUrl": "parking.svg",
+		"headers": {
+			"x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjE5NiwiaWF0IjoxNjk3ODE5MjgzLCJleHAiOjExNjk3ODE5MjgzLCJpc3MiOiJnb2xlbWlvIiwianRpIjoiYjZlZjk2OWEtNjhiOC00ODczLWI0N2ItZWU1YTBkZjZlNzQzIn0.ySlUXcYOjJV87LtZrjeqSSjIy18h2jb9iXtOD9gRf-c"
+		},
+		"popupMapper": {
+			"name": "name",
+			"tags": {"tertiary": "", "warning": ""},
+			"table": {
+				"Adresa": "address_formatted",
+				"Celkový počet míst": "total_spot_number",
+				"Počet volných míst": "available_spots_number",
+				"Poslední aktualizace volných míst": "available_spots_last_updated",
+				"Kategorie": "category",
+				"Typ parkoviště": "parking_type",
+				"Aktualizováno": "date_modified",
+				"Poskytovatel": "source",
+				"Datový zdroj": "data_provider"
+			}
+		},
+		"category": "Dopravní informace a mobilita",
+		"widgets": {
+			"small": [
+				{
+					"title": "Počet výsledků",
+					"value": {"mathOperation": "countFeatures"},
+					"text": "Celkový počet záznamů."
+				},
+				{
+					"title": "Celkový počet volných míst",
+					"value": {
+						"mathOperation": "sum",
+						"attributePath": "available_spots_number"
+					},
+					"text": "Celkový počet volných míst."
+				},
+				{
+					"title": "Celkový počet míst",
+					"value": {
+						"mathOperation": "sum",
+						"attributePath": "total_spot_number"
+					},
+					"text": "Celkový počet míst."
+				}
+			],
+			"medium": [
+				{
+					"title": "Průměrný počet parkovacích míst",
+					"description": "Průměrný počet parkovacích míst na parkovišti je ~~{{value}}~~.",
+					"graph": {
+						"type": "Ring",
+						"value": {
+							"mathOperation": "average",
+							"attributePath": "total_spot_number"
+						},
+						"strokeColor": "blue"
+					}
+				},
+				{
+					"title": "Aktuální dostupnost parkovacích míst",
+					"description": "Monitorovaná parkoviště jsou z ~~{{value}} %~~ neobsazená.",
+					"graph": {
+						"type": "Ring",
+						"value": {
+							"mathOperation": "proportion",
+							"value1": {
+								"mathOperation": "sum",
+								"attributePath": {
+									"arrayPath": "",
+									"where": {
+										"path": "total_spot_number",
+										"equals": "NOTNULL"
+									},
+									"valuePath": "available_spots_number"
+								}
+							},
+							"value2": {
+								"mathOperation": "sum",
+								"attributePath": {
+									"arrayPath": "",
+									"where": {
+										"path": "available_spots_number",
+										"equals": "NOTNULL"
+									},
+									"valuePath": "total_spot_number"
+								}
+							}
+						},
+						"strokeColor": "blue"
+					}
+				}
+			],
+			"large": [
+				{
+					"title": "Nejméně vytížená parkoviště",
+					"graph": {
+						"type": "List",
+						"paragraph": "Seznam parkovišt s největším počtem volných míst:",
+						"sortBy": "available_spots_number",
+						"sortMethod": "desc",
+						"textPath": "name"
+					}
+				}
+			]
+		}
+	}
+]

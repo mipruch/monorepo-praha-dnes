@@ -130,7 +130,7 @@ async function makeLayer(pref: any) {
 		pointToLayer: function (geoJsonPoint, latlng) {
 			return L.marker(latlng, {
 				icon: L.divIcon({
-					html: `<div class='marker-icon' style='background-color:${color}'><img src="${pref.iconUrl}"></div>`,
+					html: `<div class='marker-icon' style='background-color:${color}'><img src="${pref.iconUrl}" alt="mapová značka" width="30px" height="30px" /></div>`,
 					iconSize: [30, 30], // size of the icon
 					iconAnchor: [15, 15], // point of the icon which will correspond to marker's location
 					popupAnchor: [0, -10], // point from which the popup should open relative to the iconAnchor)
