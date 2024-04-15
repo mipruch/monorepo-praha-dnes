@@ -28,6 +28,16 @@ const config: Ref<Config> = ref({
 const title = useState("title");
 title.value = "Nová vrstva";
 
+useHead({
+	title: "Nová vrstva - Praha dnes CMS",
+	meta: [
+		{
+			name: "description",
+			content: "Toto je stránka pro vytvoření nové vrstvy.",
+		},
+	],
+});
+
 const valid = ref(false);
 
 const {toast} = useToast();

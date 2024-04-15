@@ -6,6 +6,17 @@ definePageMeta({
 	title: "Seznam vrstev",
 });
 
+useHead({
+	title: "Seznam vrstev - Praha dnes CMS",
+	meta: [
+		{
+			name: "description",
+			content:
+				"Toto je CMS stránka pro správu vrstev v aplikaci Praha dnes.",
+		},
+	],
+});
+
 const title = useState("title");
 title.value = "Seznam vrstev";
 

@@ -6,6 +6,15 @@ export default defineNuxtConfig({
 	runtimeConfig: {
 		"./runtimeConfig": "./runtimeConfig.window",
 	},
+	app: {
+		head: {
+			charset: "utf-8",
+			viewport: "width=device-width, initial-scale=1",
+			htmlAttrs: {
+				lang: "cs",
+			},
+		},
+	},
 	vite: {
 		define: {
 			"window.global": {},

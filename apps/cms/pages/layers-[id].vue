@@ -33,6 +33,16 @@ const {data: json} = await useFetch(
 const title = useState("title");
 title.value = (json.value as Config).name;
 
+useHead({
+	title: `${title.value} - Praha dnes CMS`,
+	meta: [
+		{
+			name: "description",
+			content: "Toto je stránka pro editaci nové vrstvy.",
+		},
+	],
+});
+
 const valid = ref(false);
 
 async function edit() {
