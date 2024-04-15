@@ -142,6 +142,7 @@ function isStringDate(input: string) {
 			v-if="layerConfig.popupMapper.image"
 			:src="resolveStringPath(layerConfig.popupMapper.image)"
 			:alt="resolveStringPath(layerConfig.popupMapper.name)"
+			width="480px"
 		/>
 	</div>
 </template>
