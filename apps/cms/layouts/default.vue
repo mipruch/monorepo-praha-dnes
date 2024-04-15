@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const route = useRoute();
-const title = useState("title");
+const title: Ref<string> = useState("title");
 import Toaster from "@/components/ui/toast/Toaster.vue";
 </script>
 
@@ -10,13 +10,15 @@ import Toaster from "@/components/ui/toast/Toaster.vue";
 			class="h-min-16 py-4 px-8 flex flex-row align-middle items-center border-b"
 		>
 			<Tags big v-slot="slotProps">
-				<NuxtLink to="/">
-					<Tag
-						color="green"
-						text="Praha dnes CMS"
-						:big="slotProps.big"
-					/>
-				</NuxtLink>
+				<h1>
+					<NuxtLink to="/">
+						<Tag
+							color="green"
+							text="Praha dnes CMS"
+							:big="slotProps.big"
+						/>
+					</NuxtLink>
+				</h1>
 				<!-- <Tag
 					color="light"
 					:text="$route.meta.title as string"

@@ -13,6 +13,8 @@ import {
 import {pragueMap} from "../stores/mapStore";
 import {ref} from "vue";
 import Card from "./Card.vue";
+import Tags from "./Tags.vue";
+import Tag from "./Tag.vue";
 
 import type {Layer} from "@/types";
 
@@ -44,35 +46,44 @@ async function addLayer(value: LayerConfig) {
 	<div
 		class="bg-background rounded-[var(--gap)] p-7 h-full overflow-y-scroll"
 	>
-		<div class="flex flex-row items-center mb-12">
-			<DropdownMenu>
-				<DropdownMenuTrigger class="mr-4 flex">
-					<Button>
-						<Plus class="mr-2" />
-						Přidat vrstvu
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent>
-					<template
-						v-for="(value, key, index) in Object.groupBy(
-							layers,
-							(layer) => layer.category
-						)"
-					>
-						<DropdownMenuSeparator v-if="index !== 0" />
-						<DropdownMenuLabel>{{ key }}</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem
-							v-for="layer in value"
-							@click="addLayer(layer as LayerConfig)"
-							:disabled="pragueMap.activeLayers.has(layer.id)"
+		<div class="flex flex-row mb-12">
+			<div class="flex flex-row items-center">
+				<DropdownMenu>
+					<DropdownMenuTrigger class="mr-4 flex">
+						<Button>
+							<Plus class="mr-2" />
+							Přidat vrstvu
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<template
+							v-for="(value, key, index) in Object.groupBy(
+								layers,
+								(layer) => layer.category
+							)"
 						>
-							{{ layer.name }}
-						</DropdownMenuItem>
-					</template>
-				</DropdownMenuContent>
-			</DropdownMenu>
-			<Loader2 class="w-8 h-8 animate-spin" v-if="isLoading" />
+							<DropdownMenuSeparator v-if="index !== 0" />
+							<DropdownMenuLabel>{{ key }}</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem
+								v-for="layer in value"
+								@click="addLayer(layer as LayerConfig)"
+								:disabled="pragueMap.activeLayers.has(layer.id)"
+							>
+								{{ layer.name }}
+							</DropdownMenuItem>
+						</template>
+					</DropdownMenuContent>
+				</DropdownMenu>
+				<Loader2 class="w-8 h-8 animate-spin" v-if="isLoading" />
+			</div>
+
+			<Tags class="ml-auto">
+				<Tag text="Aplikace" />
+				<h1>
+					<Tag text="Praha dnes" color="light" />
+				</h1>
+			</Tags>
 		</div>
 		<TransitionGroup
 			name="cards"

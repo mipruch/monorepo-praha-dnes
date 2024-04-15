@@ -81,10 +81,10 @@
 	body {
 		@apply bg-black text-foreground;
 	}
-
+	/* 
 	h1 {
 		@apply text-4xl font-bold leading-[120%];
-	}
+	} */
 
 	h2 {
 		@apply text-3xl font-bold leading-[120%];

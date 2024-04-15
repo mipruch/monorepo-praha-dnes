@@ -166,13 +166,13 @@ onMounted(async () => {
 			/>
 		</div>
 		<div class="mt-8">
-			<label class="opacity-60">Název vrstvy</label>
+			<p class="opacity-60">Název vrstvy</p>
 			<h2 class="text-2xl font-semibold mb-4">{{ config.name }}</h2>
 
-			<label class="opacity-60">Id vrstvy</label>
+			<p class="opacity-60">Id vrstvy</p>
 			<p class="mb-4">{{ route.params.id }}</p>
 
-			<label class="opacity-60">Errory:</label>
+			<p class="opacity-60">Errory:</p>
 			<template v-if="!valid">
 				<ul>
 					<li v-for="error in errors">{{ error }}</li>
