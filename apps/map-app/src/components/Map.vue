@@ -25,17 +25,16 @@ onMounted(() => {
 	});
 
 	zoomInButton.value?.addEventListener("click", () => {
-		pragueMap.map.flyTo(
-			pragueMap.map.getCenter(),
-			pragueMap.map.getZoom() + 1
-		);
+		const currentZoom = pragueMap.map.getZoom();
+		const maxZoom = pragueMap.maxZoom;
+		if (currentZoom >= maxZoom) return;
+		pragueMap.map.flyTo(pragueMap.map.getCenter(), currentZoom + 1);
 	});
 
 	zoomOutButton.value?.addEventListener("click", () => {
-		pragueMap.map.flyTo(
-			pragueMap.map.getCenter(),
-			pragueMap.map.getZoom() - 1
-		);
+		const currentZoom = pragueMap.map.getZoom();
+		if (currentZoom <= 0) return;
+		pragueMap.map.flyTo(pragueMap.map.getCenter(), currentZoom - 1);
 	});
 });
 </script>
@@ -44,30 +43,29 @@ onMounted(() => {
 	<div class="w-full h-full relative">
 		<div id="viewDiv" class="w-full h-full absolute top-0 left-0" />
 		<div
-			class="map-controls z-[9999] absolute bottom-0 flex justify-between w-full p-[--gap] items-end"
+			ref="layersButton"
+			id="layersButton"
+			class="z-[9999] absolute bottom-0 m-[--gap] w-[75px] h-[75px] bg-foreground rounded-[var(--gap)] cursor-pointer grid items-center justify-center hover:opacity-75 transition-all duration-100 ease-in-out select-none"
+		>
+			<Layers :color="darkMode ? 'black' : 'white'" :size="28" />
+		</div>
+		<div
+			id="zoomGroup"
+			class="grid items-end h-min gap-[7px] z-[9999] absolute bottom-0 right-0 m-[--gap]"
 		>
 			<div
-				ref="layersButton"
-				id="layersButton"
-				class="w-[100px] h-[100px] bg-foreground rounded-[var(--gap)] cursor-pointer grid items-center justify-center hover:opacity-75 transition-all duration-100 ease-in-out select-none"
+				class="w-8 h-8 bg-foreground leading-none rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"
+				id="zoomin"
+				ref="zoomInButton"
 			>
-				<Layers :color="darkMode ? 'black' : 'white'" :size="36" />
+				<span class="translate-y-[-2px]"> + </span>
 			</div>
-			<div id="zoomGroup" class="grid items-end h-min gap-[7px]">
-				<div
-					class="w-8 h-8 bg-foreground leading-none rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"
-					id="zoomin"
-					ref="zoomInButton"
-				>
-					+
-				</div>
-				<div
-					class="w-8 h-8 leading-none bg-foreground rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"
-					id="zoomout"
-					ref="zoomOutButton"
-				>
-					-
-				</div>
+			<div
+				class="w-8 h-8 leading-none bg-foreground rounded-[7px] text-background grid place-items-center cursor-pointer text-xl hover:opacity-75 transition-all duration-100 ease-in-out select-none"
+				id="zoomout"
+				ref="zoomOutButton"
+			>
+				<span class="translate-y-[-2px]"> - </span>
 			</div>
 		</div>
 	</div>

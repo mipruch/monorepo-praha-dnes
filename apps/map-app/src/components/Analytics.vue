@@ -40,6 +40,15 @@ async function addLayer(value: LayerConfig) {
 		isLoading.value = false;
 	});
 }
+
+const groupBy = (items: any[], key: string) =>
+	items.reduce(
+		(result, item) => ({
+			...result,
+			[item[key]]: [...(result[item[key]] || []), item],
+		}),
+		{}
+	);
 </script>
 
 <template>
@@ -57,9 +66,9 @@ async function addLayer(value: LayerConfig) {
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
 						<template
-							v-for="(value, key, index) in Object.groupBy(
+							v-for="(value, key, index) in groupBy(
 								layers,
-								(layer) => layer.category
+								'category'
 							)"
 						>
 							<DropdownMenuSeparator v-if="index !== 0" />
