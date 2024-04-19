@@ -17,7 +17,7 @@ export const handler = async (event: any) => {
 
 	const statusCode = "200";
 	const headers = {
-		"Access-Control-Allow-Origin": "*",
+		"Access-Control-Allow-Origin": "https://praha-dnes-cms.michalprucha.cz",
 		"Access-Control-Allow-Methods": "DELETE, OPTIONS",
 	};
 	const body = JSON.stringify(response);

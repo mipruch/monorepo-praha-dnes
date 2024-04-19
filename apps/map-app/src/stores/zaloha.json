@@ -208,7 +208,6 @@
 		}
 	},
 	{
-		"id": "medicalinstitutions",
 		"name": "Zdravotnická zařízení",
 		"category": "Veřejná vybavenost",
 		"color": "#FF0000",
@@ -261,7 +260,6 @@
 		}
 	},
 	{
-		"id": "zahrady",
 		"name": "Zahrady",
 		"category": "Veřejná vybavenost",
 		"color": "#00C300",
@@ -299,7 +297,6 @@
 		}
 	},
 	{
-		"id": "municipallibraries",
 		"name": "Knihovny",
 		"category": "Veřejná vybavenost",
 		"color": "#B89000",
@@ -363,7 +360,6 @@
 		}
 	},
 	{
-		"id": "verejna-sprava",
 		"name": "Informace o úřadech",
 		"paragraph": "Veřejná správa. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
 		"color": "#FF5A00",
@@ -526,7 +522,6 @@
 		}
 	},
 	{
-		"id": "vehiclepositions",
 		"name": "Pozice vozidel PID",
 		"category": "Veřejná doprava",
 		"color": "#7200B8",
@@ -570,7 +565,6 @@
 		}
 	},
 	{
-		"id": "playgrounds",
 		"name": "Hřiště",
 		"category": "Veřejná vybavenost",
 		"color": "#00C300",
@@ -679,7 +673,6 @@
 		}
 	},
 	{
-		"id": "parkoviste",
 		"name": "Parkoviště",
 		"paragraph": "Parkoviště. Officia Lorem minim ea et. Dolore mollit dolor anim ut consectetur anim excepteur laboris eu est. Reprehenderit nisi proident proident adipisicing occaecat nostrud do. Pariatur qui ex voluptate.",
 		"color": "#0066FF",

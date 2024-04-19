@@ -12,7 +12,7 @@ export const handler: Handler = async (event: any) => {
 	const body = JSON.parse(event.body);
 	const headers = {
 		"Content-Type": "application/json",
-		"Access-Control-Allow-Origin": "*",
+		"Access-Control-Allow-Origin": "https://praha-dnes-cms.michalprucha.cz",
 		"Access-Control-Allow-Methods": " OPTIONS, POST",
 	};
 

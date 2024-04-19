@@ -66,7 +66,7 @@ async function remove(layerId: string) {
 <template>
 	<div class="max-w-7xl mx-auto px-4 pb-12 mt-8">
 		<div class="flex justify-between items-center mb-6 pl-6">
-			<h3 class="text-2xl font-semibold">Seznam vrstev</h3>
+			<h2 class="text-2xl font-semibold">Seznam vrstev</h2>
 			<NuxtLink to="/new-layer">
 				<Button variant="outline">
 					<LucidePlus class="mr-2" />
@@ -95,6 +95,7 @@ async function remove(layerId: string) {
 					variant="outline"
 					size="icon"
 					class="hidden group-hover:grid"
+					aria-label="Odstranit vrstvu"
 				>
 					<LucideTrash class="" />
 				</Button>

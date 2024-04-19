@@ -47,10 +47,13 @@ class PragueMap {
 		this.map.addLayer(this.darkBase);
 	}
 
+	public maxZoom = 18;
+
 	public initializeMap(containerId: string) {
 		this.map = L.map("viewDiv", {
 			center: [50.075, 14.46],
 			zoom: 12,
+			maxZoom: this.maxZoom,
 			zoomControl: false,
 			layers: [this.lightBase],
 			attributionControl: false,
@@ -162,6 +165,21 @@ async function makeLayer(pref: any) {
 						),
 						document.getElementById(`map-popup-${id}`)!
 					);
+				});
+				layer.on("keypress", (e) => {
+					if (e.originalEvent.key === "Enter") {
+						render(
+							h(
+								Popup,
+								{
+									featureProperties: feature.properties,
+									layerConfig: pref,
+								} as any,
+								undefined
+							),
+							document.getElementById(`map-popup-${id}`)!
+						);
+					}
 				});
 			}
 		},
