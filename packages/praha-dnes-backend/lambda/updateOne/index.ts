@@ -1,9 +1,5 @@
 import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
-import {
-	PutCommand,
-	DynamoDBDocumentClient,
-	UpdateCommand,
-} from "@aws-sdk/lib-dynamodb";
+import {DynamoDBDocumentClient, UpdateCommand} from "@aws-sdk/lib-dynamodb";
 import {Handler} from "aws-cdk-lib/aws-lambda";
 
 const client = new DynamoDBClient({});
@@ -15,7 +11,7 @@ export const handler: Handler = async (event: any) => {
 	const body = JSON.parse(event.body);
 	const headers = {
 		"Content-Type": "application/json",
-		"Access-Control-Allow-Origin": "*",
+		"Access-Control-Allow-Origin": "https://praha-dnes-cms.michalprucha.cz",
 		"Access-Control-Allow-Methods": " OPTIONS, POST",
 	};
 
